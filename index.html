@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleLoops</title>
+    <style>
+    button
+    {
+        height: 20px;
+    }
+    .instrument2 >button
+    {
+        height: 20px;
+    }
+    #view_bpm
+    {
+        width: 3em;
+    }
+    #bt-wrapper
+    {
+        display: inline-block;
+    }
+    </style>
+    
+</head>
+<body oncontextmenu="return false">
+    <button onclick="start_play()">开始</button>
+    <button onclick="stop()">停止</button>
+    <label>bpm</label>
+    <input id="view_bpm" type="number" value="60" min="10" max="240"></input>
+    <button onclick="faster()">节奏+</button>
+    <button onclick="slower()">节奏-</button>
+    <button onclick="trig()">触发测试</button>
+    <button onclick="stop_trig()">停止触发测试</button>
+    <button>调音台开关</button>
+    <div id="instrument1">
+        <span class="name">Kick</span>
+        <label for="">音量</label>
+        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
+        <div id="bt-wrapper">
+            <button id="beat1"></button>
+            <button id="beat2"></button>
+            <button id="beat3"></button>
+            <button id="beat4"></button>
+            <button id="beat5"></button>
+            <button id="beat6"></button>
+            <button id="beat7"></button>
+            <button id="beta8"></button>
+            <button id="beta9"></button>
+            <button id="beta10"></button>
+            <button id="beat11"></button>
+            <button id="beta12"></button>
+            <button id="beat13"></button>
+            <button id="beat14"></button>
+            <button id="beat15"></button>
+            <button id="beat16"></button>
+        </div>
+    </div>
+    <style>
+        .slide-wrapper
+        {
+            border: solid 2px black;
+            width:20px;
+            height: 100px;
+            display: inline-block;
+        }
+        .slider
+        {
+            background-color: black;
+            width: 20px;
+            height: 20px;
+            margin-top: 50px;
+        }
+        .mixer
+        {
+            display: inline-flex;
+            border: solid 2px black;
+            flex-direction: column;
+        }
+        span
+        {
+            font-size: small;
+        }
+    </style>
+    <h2>调音台</h2>
+    <div class="mixer">
+        <div class="slide-wrapper">
+            <div class="slider"></div>
+        </div>
+        <span>音量:100</span>
+    </div>
+    <div class="mixer">
+        <div class="slide-wrapper">
+            <div class="slider"></div>
+        </div>
+        <span>音量:100</span>
+    </div>
+    <div class="mixer">
+        <div class="slide-wrapper">
+            <div class="slider"></div>
+        </div>
+        <span>音量:100</span>
+    </div>
+    <div class="mixer">
+        <div class="slide-wrapper">
+            <div class="slider"></div>
+        </div>
+        <span>音量:100</span>
+    </div>
+    <script>
+        // 全局变量
+        var bpm = 60
+        var ctx= new AudioContext()
+        
+        var bpm = 60
+        var interval = 60000 / bpm
+        // 鼠标事件
+        const MouseRight = 2
+        const MouseLeft = 0
+        // 组件变量
+        var kick_on_off = new Float32Array(16)//[0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0]
+        console.log(kick_on_off)
+        // timer index
+        var main_looper
+        var index = 0
+        // 组件初始化
+        var view_bpm = document.getElementById("view_bpm")
+        var bt_wrapper = document.getElementById("bt-wrapper")
+        var childs = bt_wrapper.children
+
+        // console.log(childs)
+        // 事件初始化
+        for(var i=0;i<childs.length;i++)
+        {
+           var e_button = childs[i]
+           e_button.addEventListener("mousedown",on_pad_down)
+           e_button.addEventListener("contextmenu",on_pad_context)
+        }
+        function on_pad_down(event)
+        {
+            event.target.style = "background-color:red"
+            var pt = event.target
+            // console.log(event)
+            if(event.button == MouseLeft)
+            {
+                if(pt.id == "beat1")
+                {
+                    kick_on_off[0] = parseFloat("1")
+                }
+                if(pt.id == "beat2")
+                {
+                    kick_on_off[1] = parseFloat("1")
+                }
+                if(pt.id == "beat3")
+                {
+                    kick_on_off[2] = parseFloat("1")
+                }
+                if(pt.id == "beat4")
+                {
+                    kick_on_off[3] = parseFloat("1")
+                }
+                if(pt.id == "beat5")
+                {
+                    kick_on_off[4] = parseFloat("1")
+                }
+                if(pt.id == "beat6")
+                {
+                    kick_on_off[5] = parseFloat("1")
+                }
+                if(pt.id == "beat7")
+                {
+                    kick_on_off[6] = parseFloat("1")
+                }
+                if(pt.id == "beat8")
+                {
+                    kick_on_off[7] = parseFloat("1")
+                }
+
+                if(pt.id == "beat9")
+                {
+                    kick_on_off[8] = parseFloat("1")
+                }
+                if(pt.id == "beat10")
+                {
+                    kick_on_off[9] = parseFloat("1")
+                }
+                if(pt.id == "beat11")
+                {
+                    kick_on_off[10] = parseFloat("1")
+                }
+                if(pt.id == "beat12")
+                {
+                    kick_on_off[11] = parseFloat("1")
+                }
+
+                if(pt.id == "beat13")
+                {
+                    kick_on_off[12] = parseFloat("1")
+                }
+                if(pt.id == "beat14")
+                {
+                    kick_on_off[13] = parseFloat("1")
+                }
+                if(pt.id == "beat15")
+                {
+                    kick_on_off[14] = parseFloat("1")
+                }
+                if(pt.id == "beat16")
+                {
+                    kick_on_off[15] = parseFloat("1")
+                }
+                
+            }
+            if(event.button == MouseRight)
+            {
+                if(pt.id == "beat1")
+                {
+                    kick_on_off[0] = 0
+                }
+                if(pt.id == "beat2")
+                {
+                    kick_on_off[1] = 0
+                }
+                if(pt.id == "beat3")
+                {
+                    kick_on_off[2] = 0
+                }
+                if(pt.id == "beat4")
+                {
+                    kick_on_off[3] = 0
+                }
+                if(pt.id == "beat5")
+                {
+                    kick_on_off[4] = 0
+                }
+
+                if(pt.id == "beat6")
+                {
+                    kick_on_off[5] = 0
+                }
+                if(pt.id == "beat7")
+                {
+                    kick_on_off[6] = 0
+                }
+
+                if(pt.id == "beat8")
+                {
+                    kick_on_off[7] = 0
+                }
+                if(pt.id == "beat9")
+                {
+                    kick_on_off[8] = 0
+                }
+
+                if(pt.id == "beat10")
+                {
+                    kick_on_off[9] = 0
+                }
+                if(pt.id == "beat11")
+                {
+                    kick_on_off[10] = 0
+                }
+                if(pt.id == "beat12")
+                {
+                    kick_on_off[11] = 0
+                }
+
+                if(pt.id == "beat13")
+                {
+                    kick_on_off[12] = 0
+                }
+                if(pt.id == "beat14")
+                {
+                    kick_on_off[13] = 0
+                }
+
+                if(pt.id == "beat15")
+                {
+                    kick_on_off[14] = 0
+                }
+                if(pt.id == "beat16")
+                {
+                    kick_on_off[15] = 0
+                }
+            }
+            // console.log(kick_on_off)
+        }
+        // 需要修复
+        function get_self_index_at_parent(p_target)
+        {
+            var wrapper = p_target.parentNode
+            var index = Array.prototype.indexOf.call(wrapper,p_target)
+            console.log(index)
+        }
+        function on_pad_context(event)
+        {
+            event.target.style = "background-color:none"
+        }
+        // 聚焦
+        view_bpm.addEventListener("wheel",function(event)
+        {
+            bpm=view_bpm.value
+            // console.log(bpm)
+        })
+        view_bpm.addEventListener("change",(event)=>
+        {
+            bpm=view_bpm.value
+            console.log("bpm" + view_bpm.value)
+        })
+        function faster()
+        {
+            bpm+=1
+            view_bpm.value =bpm
+        }
+        function slower()
+        {
+            bpm-=1
+            view_bpm.value = bpm
+        }
+        // 创建工作 物理接线应该在开始演出之前完成
+        var osc_test
+        var test_channel1
+        function init_connect()
+        {
+            var osc = ctx.createOscillator()
+            osc_test = osc
+            var ins1 = {
+                "type":"osc"
+            }
+            test_channel1 = ctx.createGain()
+            test_channel1.connect(ctx.destination)
+            test_channel1.gain.value = 1
+            osc_test.connect(test_channel1)
+            osc_test.type = "sine"
+            osc_test.frequency.value = 440
+        }
+        init_connect()
+        function start_play()
+        {
+            osc_test.start()
+            play()
+        }
+        function play()
+        {
+            index += 1
+            test_channel1.gain.value = parseFloat(kick_on_off[index])
+            if(index == 16)
+            {
+                index = 1
+            }
+            console.log("times: " + index  +" on/off: " + kick_on_off[index])
+            main_looper = setTimeout(play, interval);
+            
+        }
+    function stop()
+    {
+        clearTimeout(main_looper)
+    }
+    // 测试代码
+    var gainNode = ctx.createGain()
+    gainNode.connect(ctx.destination)
+    gainNode.gain.value = parseFloat("1")
+    var osc 
+    function trig()
+    {
+            osc=ctx.createOscillator()
+            osc.connect(gainNode)
+            osc.type = "sine"
+            osc.frequency.value = 440
+            osc.start()
+    }
+    function stop_trig()
+    {
+        osc.stop()
+    }
+    function change_vol(p)
+    {
+        // console.log(p.value)
+        var c = parseFloat(p.value)
+        gainNode.gain.value = parseFloat(c)
+    }
+
+    </script>
+  
+</body>
+</html>
