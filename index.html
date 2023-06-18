@@ -29,7 +29,7 @@
     <button onclick="start_play()">开始</button>
     <button onclick="stop()">停止</button>
     <label>bpm</label>
-    <input id="view_bpm" type="number" value="60" min="10" max="240"></input>
+    <input id="view_bpm" type="number" value="130" min="10" max="240"></input>
     <button onclick="faster()">节奏+</button>
     <button onclick="slower()">节奏-</button>
     <button onclick="trig()">触发测试</button>
@@ -113,13 +113,12 @@
     <div class="piano-roll">
 
     </div>
-    <canvas class="osc-view"></canvas>
+    <canvas class="osc-view" width="200px" height="100px"></canvas>
     <script>
         // 全局变量
-        var bpm = 60
         var ctx= new AudioContext()
         
-        var bpm = 60
+        var bpm = 130
         var interval = 60000 / bpm
         // 鼠标事件
         const MouseRight = 2
@@ -169,6 +168,7 @@
                 if(pt.id == "beat5")
                 {
                     kick_on_off[4] = 1.0
+                    event.target.style = "background-color:green"
                 }
                 if(pt.id == "beat6")
                 {
@@ -203,6 +203,7 @@
                 if(pt.id == "beat13")
                 {
                     kick_on_off[12] = 1.0
+                    event.target.style = "background-color:green"
                 }
                 if(pt.id == "beat14")
                 {
@@ -351,13 +352,13 @@
         }
         function play()
         {
-            index += 1
-            test_channel1.gain.value = kick_on_off[index]
-            if(index > 16)
-            {
-                index = 1
-            }
             console.log("times: " + index  +" on/off: " + kick_on_off[index])
+            test_channel1.gain.value = kick_on_off[index]
+            if(index > 14)
+            {
+                index = -1
+            }
+            index += 1
             main_looper = setTimeout(play, interval);
             
         }
