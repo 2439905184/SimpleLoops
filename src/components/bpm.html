@@ -1,0 +1,55 @@
+<style>
+    #bpm-compontent
+    {
+        display: inline-block;
+    }
+</style>
+<div id="bpm-compontent">
+    <span>bpm</span>
+    <input type="number" value="130" min="10" max="240"/>
+    <button>节奏+</button>
+    <button>节奏-</button>
+</div>
+<script>
+    function Bpm()
+    {
+        // 组件层
+        var root_ctl = document.getElementById("bpm-compontent")
+        var children = root_ctl.children
+        var sub_input = children.item(1)
+        var sub_faster = children.item(2)
+        var sub_slower = children.item(3)
+        // 组件变量层 
+        var v = parseInt(sub_input.value)//int
+        // 事件绑定
+        sub_faster.addEventListener("mousedown",(event)=>
+        {
+            this.faster()
+        })
+        sub_slower.addEventListener('mousedown',(event)=>
+        {
+            this.slower()
+        })
+        var value = sub_input.value
+        this.set_value = function(p_value)
+        {
+            // var v = parseInt(sub_input.value)
+            sub_input.value = p_value 
+        }
+        this.get_value = function()
+        {
+            return v
+        }
+        this.faster = function()
+        {
+            this.set_value(v+=1)
+            // console.log(this.get_value())
+        }
+        this.slower = function()
+        {
+            this.set_value(v-=1)
+            // console.log(this.get_value())
+        }
+    }
+    var Bpm = new Bpm()
+</script>

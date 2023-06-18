@@ -1,3 +1,4 @@
+var sound_loaded_status = [0,0,0,0]
 var kick_buffer
 var clap_buffer
 var hihat_buffer
@@ -12,8 +13,10 @@ kick_rq.onload = function(event)
     ctx.decodeAudioData(kick_rq.response,(data)=>
     {
         kick_buffer = data
+        sound_loaded_status[0] = 1
+        // console.log(kick_buffer);
         // ClapBufferNode.buffer=data
-        console.log(data);
+        // console.log(data);
     })
 }
 kick_rq.send()
@@ -27,8 +30,9 @@ clap_rq.onload = function(event)
     ctx.decodeAudioData(clap_rq.response,(data)=>
     {
         clap_buffer = data
+        sound_loaded_status[1] = 1
         // ClapBufferNode.buffer=data
-        console.log(data);
+        // console.log(data);
     })
 }
 clap_rq.send()
@@ -42,8 +46,9 @@ hihat_rq.onload = function(event)
     ctx.decodeAudioData(hihat_rq.response,(data)=>
     {
         hihat_buffer = data
+        sound_loaded_status[2] = 1
         // ClapBufferNode.buffer=data
-        console.log(data);
+        // console.log(data);
     })
 }
 hihat_rq.send()
@@ -57,8 +62,10 @@ snare_rq.onload = function(event)
     ctx.decodeAudioData(snare_rq.response,(data)=>
     {
         snare_buffer = data
+        sound_loaded_status[3] = 1
         // ClapBufferNode.buffer=data
-        console.log(data);
+        // console.log(data);
     })
 }
 snare_rq.send()
+console.log(sound_loaded_status);

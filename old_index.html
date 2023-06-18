@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleLoops</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="App.css">
+    <link rel="stylesheet" href="css/roteDisplay.css">
+    <link rel="stylesheet" href="css/oscDisplay.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <script>
+        // 全局变量
+        var ctx = new AudioContext()
+    </script>
+</head>
+<body oncontextmenu="return false">
+    <div id="logo-wrapper">
+        <div id="loading"><h1>please wait until resource loading</h1></div>
+        
+    </div>
+    <div class="App">
+        <div class="browser">
+            <ul>
+                <li>Basic 808 Kick</li>
+                <li>Basic 808 Clap</li>
+                <li>Basic 808 HiHat</li>
+                <li>Basic 808 Snare</li>
+            </ul>
+        </div>
+        <div class="content">
+                <!-- topbar -->
+            <div class="hbox">
+                <button>音频浏览器开关</button>
+                <button onclick="start_play()">开始</button>
+                <button onclick="stop()">停止</button>
+                
+                <button onclick="trig()">触发测试</button>
+                <button onclick="stop_trig()">停止触发测试</button>
+                <button>调音台开关</button>
+                <span id="timer">00:00</span>
+            </div>
+    <canvas id="osc-display" width="40px" height="20px"></canvas>
+    <div id="test-view">{{测试view}}</div>
+    <div id="instrument1">
+        <span class="name">Kick</span>
+        <label for="">音量</label>
+        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
+        <div id="bt-wrapper">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </div>
+    </div>
+    <div id="instrument2">
+        <span class="name">Clap</span>
+        <label for="">音量</label>
+        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
+        <div id="bt-wrapper2">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </div>
+    </div>
+    <div id="instrument3">
+        <span class="name">Hihat</span>
+        <label for="">音量</label>
+        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
+        <div id="bt-wrapper3">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </div>
+    </div>
+    <div id="instrument4">
+        <span class="name">Snare</span>
+        <label for="">音量</label>
+        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
+        <div id="bt-wrapper4">
+            <button id="beat1"></button>
+            <button id="beat2"></button>
+            <button id="beat3"></button>
+            <button id="beat4"></button>
+            <button id="beat5"></button>
+            <button id="beat6"></button>
+            <button id="beat7"></button>
+            <button id="beat8"></button>
+            <button id="beat9"></button>
+            <button id="beat10"></button>
+            <button id="beat11"></button>
+            <button id="beat12"></button>
+            <button id="beat13"></button>
+            <button id="beat14"></button>
+            <button id="beat15"></button>
+            <button id="beat16"></button>
+        </div>
+    </div>
+    <!-- <h2>调音台</h2>
+    <div class="mixer">
+        <div class="slide-wrapper">
+            <div class="slider"></div>
+        </div>
+        <span>音量:100</span>
+    </div> -->
+    <div class="mixer">
+        <div class="slide-wrapper">
+            <div class="slider"></div>
+        </div>
+        <span>音量:100</span>
+    </div>
+    <div class="mixer">
+        <div class="slide-wrapper">
+            <div class="slider"></div>
+        </div>
+        <span>音量:100</span>
+    </div>
+    <div class="mixer">
+        <div class="slide-wrapper">
+            <div class="slider"></div>
+        </div>
+        <span>音量:100</span>
+    </div>
+    <div class="piano-roll">
+
+    </div>
+    </div>
+    <!-- 底层音频节点路由图组件 -->
+    <span>音频路由图</span>
+    <div id="roteDisplay">
+        <div class="moduleNode">Kick Sampler</div>
+        <div class="moduleNode">-></div>
+        <div class="moduleNode">Gain Node</div>
+        <div class="moduleNode">AudioDestinationNode(output)</div>
+        
+        <div class="moduleNode">Clap Sampler</div>
+        <div class="moduleNode">-></div>
+        <div class="moduleNode">Gain Node</div>
+        <div class="moduleNode">AudioDestinationNode(output)</div>
+        
+        <div class="moduleNode">HiHat Sampler</div>
+        <div class="moduleNode">-></div>
+        <div class="moduleNode">Gain Node</div>
+        <div class="moduleNode">AudioDestinationNode(output)</div>
+        
+        <div class="moduleNode">Snare Sampler</div>
+        <div class="moduleNode">-></div>
+        <div class="moduleNode">Gain Node</div>
+        <div class="moduleNode">AudioDestinationNode(output)</div>
+        
+        <!-- <div class="moduleNode">AudioContext</div> -->
+        <!-- <div class="moduleNode">AudioContext</div> -->
+    </div>
+</div>
+    <canvas class="osc-view" width="200px" height="100px"></canvas>
+    <script src="my_res_loader.js"></script>
+    <!-- <script src="js/browser.js"></script> -->
+    <!-- <script src="js/oscDisplay.js"></script> -->
+    <script>
+        const loading = document.getElementById("logo-wrapper")
+        const app = document.getElementsByClassName("App").item(0)
+        var show_main_ui = false
+        // console.log(ctx);
+        // 基础延时
+        setTimeout(() => {
+            for(var i=0; i<sound_loaded_status.length; i++)
+            {
+                if(sound_loaded_status[i]==1)
+                {
+                    if(i==3)
+                    {
+                        show_main_ui = true
+                        if(show_main_ui)
+                        {
+                            loading.style = "display:none"
+                            app.style = "display:block"
+                            main()
+                        }
+                    }
+                }
+            }
+        }, 1500);
+        // 程序入口
+        function main()
+        {
+            // 从开始播放按钮按下往后记录
+            var startTimes = 0
+            // 按下播放后，满60进一
+            var calcuated_min = 0
+            var bpm = 130
+            var interval = 60000 / bpm
+            // 鼠标事件
+            const MouseRight = 2
+            const MouseLeft = 0
+            // 组件变量
+            var drum_on_off = new Float32Array(16)//[0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0]
+            var drum_on_off2 = new Float32Array(16)
+            var drum_on_off3 = new Float32Array(16)
+            var drum_on_off4 = new Float32Array(16)
+            // timer index
+            var main_looper
+            var main_timer
+            var index = 0
+
+            // 组件初始化
+            const view_bpm = document.getElementById("view_bpm")
+            //通道机架根节点
+            const bt_wrapper = document.getElementById("bt-wrapper")
+            const bt_wrapper2 = document.getElementById("bt-wrapper2")
+            const bt_wrapper3 = document.getElementById("bt-wrapper3")
+            const bt_wrapper4 = document.getElementById("bt-wrapper4")
+
+            const channel_rack1_drumbuttons = bt_wrapper.children
+            const channel_rack2_drumbuttons = bt_wrapper2.children
+            const channel_rack3_drumbuttons = bt_wrapper3.children
+            const channel_rack4_drumbuttons = bt_wrapper4.children
+            const test_view = document.getElementById("test-view")
+            const timer = document.getElementById("timer")
+
+            // 通道机架事件初始化
+            for(var i=0;i<channel_rack1_drumbuttons.length;i++)
+            {
+            var e_button = channel_rack1_drumbuttons[i]
+            e_button.addEventListener("mousedown",on_pad_down)
+            e_button.addEventListener("contextmenu",on_pad_context)
+            }
+            for(var i=0;i<channel_rack2_drumbuttons.length;i++)
+            {
+            var e_button = channel_rack2_drumbuttons[i]
+            e_button.addEventListener("mousedown",on_pad_down)
+            e_button.addEventListener("contextmenu",on_pad_context)
+            }
+            for(var i=0;i<channel_rack3_drumbuttons.length;i++)
+            {
+            var e_button = channel_rack3_drumbuttons[i]
+            e_button.addEventListener("mousedown",on_pad_down)
+            e_button.addEventListener("contextmenu",on_pad_context)
+            }
+            for(var i=0;i<channel_rack4_drumbuttons.length;i++)
+            {
+            var e_button = channel_rack4_drumbuttons[i]
+            e_button.addEventListener("mousedown",on_pad_down)
+            e_button.addEventListener("contextmenu",on_pad_context)
+            }
+
+            function on_pad_down(event)
+            {
+                if(event.button == MouseLeft)
+                {
+                    
+                    var children = event.target.parentNode.children
+                    
+                    for(var index=0; index < children.length; index++)
+                    {
+                        children.item(index).addEventListener("mousedown",(event)=>
+                        {
+                            var cur_child = event.target
+                            var index = Array.prototype.indexOf.call(children,cur_child)
+                            if(index == 4)
+                            {
+                                event.target.style = "background-color:green"
+                            }
+                            else if(index == 12)
+                            {
+                                event.target.style = "background-color:green"
+                            }
+                            else
+                            {
+                                event.target.style = "background-color:red"
+                            }
+                            // console.log(index);
+                            drum_on_off2[index] = 1
+                            test_view.innerText = drum_on_off2
+                        })
+                    }
+                }
+            }
+            function on_pad_context(event)
+            {
+                event.target.style = "background-color:none"
+            }
+            // bpm组件
+            view_bpm.addEventListener("wheel",function(event)
+            {
+                bpm=view_bpm.value
+            })
+            view_bpm.addEventListener("change",(event)=>
+            {
+                bpm=view_bpm.value
+                console.log("bpm" + view_bpm.value)
+            })
+             // 外部组件事件
+        function faster()
+        {
+            bpm+=1
+            view_bpm.value =bpm
+        }
+        function slower()
+        {
+            bpm-=1
+            view_bpm.value = bpm
+        }
+        function start_play()
+        {
+            play()
+            start_timer()
+        }
+        function start_timer()
+        {
+            startTimes+=1
+            // 60倍数
+            if(startTimes%60 ==0)
+            {
+                startTimes = 0
+                calcuated_min+=1
+            }
+            main_timer = setTimeout(() => {
+                timer.innerText = calcuated_min + ":" + startTimes
+                start_timer()
+            }, 1000);
+        }
+        var kickBufferNode = ctx.createBufferSource()
+        var clapBufferNoed = ctx.createBufferSource()
+        var hihatBufferNode = ctx.createBufferSource()
+        var snareBufferNode = ctx.createBufferSource()
+        // console.log(kick_buffer);
+        function play()
+        {
+            // console.log(index)
+            // console.log("times: " + index  +" on/off: " + drum_on_off[index])
+            // console.log("times: " + index  +" on/off: " + drum_on_off2[index])
+            // console.log("times: " + index  +" on/off: " + drum_on_off3[index])
+            // console.log("times: " + index  +" on/off: " + drum_on_off4[index])
+            if(drum_on_off[index] == 1)
+            {
+                console.log(kick_buffer);
+                kickBufferNode.buffer = kick_buffer
+                kickBufferNode.connect(ctx.destination)
+                kickBufferNode.start()
+            }
+            if(drum_on_off2[index] == 1)
+            {
+                
+                clapBufferNoed.buffer = clap_buffer
+                clapBufferNoed.connect(ctx.destination)
+                clapBufferNoed.start()
+            }
+            if(drum_on_off3[index] == 1)
+            {
+                
+                hihatBufferNode.buffer = hihat_buffer
+                hihatBufferNode.connect(ctx.destination)
+                hihatBufferNode.start()
+            }
+            if(drum_on_off4[index] == 1)
+            {
+                
+                snareBufferNode.buffer = snare_buffer
+                snareBufferNode.connect(ctx.destination)
+                snareBufferNode.start()
+            }
+            if(index > 14)
+            {
+                index = -1
+            }
+            index += 1
+            main_looper = setTimeout(play, interval);
+            
+        }
+        function stop()
+    {
+        clearTimeout(main_looper)
+        index = 0
+        clear_counted_times()
+        
+    }
+    function clear_counted_times()
+    {
+        timer.innerText = "00:00"
+        clearTimeout(main_timer)
+    }
+    // 测试代码
+    var gainNode = ctx.createGain()
+    gainNode.connect(ctx.destination)
+    gainNode.gain.value = 1.0
+    var osc 
+    function trig()
+    {
+            osc=ctx.createOscillator()
+            osc.connect(gainNode)
+            osc.type = "sine"
+            osc.frequency.value = 440
+            osc.start()
+    }
+    function stop_trig()
+    {
+        osc.stop()
+    }
+}
+       
+   
+    </script>
+</body>
+</html>
