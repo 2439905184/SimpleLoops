@@ -1,0 +1,53 @@
+button
+{
+    height: 20px;
+}
+.instrument2 >button
+{
+    height: 20px;
+}
+#view_bpm
+{
+    width: 3em;
+}
+#bt-wrapper
+{
+    display: inline-block;
+}
+.hbox
+{
+    background-color: gray;
+}
+body
+{
+    margin-top: 0;
+}
+#timer
+{
+    font-size: large;
+    color: white;
+}
+    .slide-wrapper
+    {
+        border: solid 2px black;
+        width:20px;
+        height: 100px;
+        display: inline-block;
+    }
+    .slider
+    {
+        background-color: black;
+        width: 20px;
+        height: 20px;
+        margin-top: 50px;
+    }
+    .mixer
+    {
+        display: inline-flex;
+        border: solid 2px black;
+        flex-direction: column;
+    }
+    span
+    {
+        font-size: small;
+    }
