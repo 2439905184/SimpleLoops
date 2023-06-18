@@ -35,6 +35,7 @@
     <button onclick="trig()">触发测试</button>
     <button onclick="stop_trig()">停止触发测试</button>
     <button>调音台开关</button>
+    <div id="test-view">{{测试view}}</div>
     <div id="instrument1">
         <span class="name">Kick</span>
         <label for="">音量</label>
@@ -47,11 +48,11 @@
             <button id="beat5"></button>
             <button id="beat6"></button>
             <button id="beat7"></button>
-            <button id="beta8"></button>
-            <button id="beta9"></button>
-            <button id="beta10"></button>
+            <button id="beat8"></button>
+            <button id="beat9"></button>
+            <button id="beat10"></button>
             <button id="beat11"></button>
-            <button id="beta12"></button>
+            <button id="beat12"></button>
             <button id="beat13"></button>
             <button id="beat14"></button>
             <button id="beat15"></button>
@@ -109,6 +110,10 @@
         </div>
         <span>音量:100</span>
     </div>
+    <div class="piano-roll">
+
+    </div>
+    <canvas class="osc-view"></canvas>
     <script>
         // 全局变量
         var bpm = 60
@@ -129,7 +134,7 @@
         var view_bpm = document.getElementById("view_bpm")
         var bt_wrapper = document.getElementById("bt-wrapper")
         var childs = bt_wrapper.children
-
+        var test_view = document.getElementById("test-view")
         // console.log(childs)
         // 事件初始化
         for(var i=0;i<childs.length;i++)
@@ -147,143 +152,145 @@
             {
                 if(pt.id == "beat1")
                 {
-                    kick_on_off[0] = parseFloat("1")
+                    kick_on_off[0] = 1.0
                 }
                 if(pt.id == "beat2")
                 {
-                    kick_on_off[1] = parseFloat("1")
+                    kick_on_off[1] = 1.0
                 }
                 if(pt.id == "beat3")
                 {
-                    kick_on_off[2] = parseFloat("1")
+                    kick_on_off[2] = 1.0
                 }
                 if(pt.id == "beat4")
                 {
-                    kick_on_off[3] = parseFloat("1")
+                    kick_on_off[3] = 1.0
                 }
                 if(pt.id == "beat5")
                 {
-                    kick_on_off[4] = parseFloat("1")
+                    kick_on_off[4] = 1.0
                 }
                 if(pt.id == "beat6")
                 {
-                    kick_on_off[5] = parseFloat("1")
+                    kick_on_off[5] = 1.0
                 }
                 if(pt.id == "beat7")
                 {
-                    kick_on_off[6] = parseFloat("1")
+                    kick_on_off[6] = 1.0
                 }
                 if(pt.id == "beat8")
                 {
-                    kick_on_off[7] = parseFloat("1")
+                    kick_on_off[7] = 1.0
                 }
 
                 if(pt.id == "beat9")
                 {
-                    kick_on_off[8] = parseFloat("1")
+                    kick_on_off[8] = 1.0
                 }
                 if(pt.id == "beat10")
                 {
-                    kick_on_off[9] = parseFloat("1")
+                    kick_on_off[9] = 1.0
                 }
                 if(pt.id == "beat11")
                 {
-                    kick_on_off[10] = parseFloat("1")
+                    kick_on_off[10] = 1.0
                 }
                 if(pt.id == "beat12")
                 {
-                    kick_on_off[11] = parseFloat("1")
+                    kick_on_off[11] = 1.0
                 }
 
                 if(pt.id == "beat13")
                 {
-                    kick_on_off[12] = parseFloat("1")
+                    kick_on_off[12] = 1.0
                 }
                 if(pt.id == "beat14")
                 {
-                    kick_on_off[13] = parseFloat("1")
+                    kick_on_off[13] = 1.0
                 }
                 if(pt.id == "beat15")
                 {
-                    kick_on_off[14] = parseFloat("1")
+                    kick_on_off[14] = 1.0
                 }
                 if(pt.id == "beat16")
                 {
-                    kick_on_off[15] = parseFloat("1")
+                    kick_on_off[15] = 1.0
                 }
+                test_view.innerText = kick_on_off
                 
             }
             if(event.button == MouseRight)
             {
                 if(pt.id == "beat1")
                 {
-                    kick_on_off[0] = 0
+                    kick_on_off[0] = 0.0
                 }
                 if(pt.id == "beat2")
                 {
-                    kick_on_off[1] = 0
+                    kick_on_off[1] = 0.0
                 }
                 if(pt.id == "beat3")
                 {
-                    kick_on_off[2] = 0
+                    kick_on_off[2] = 0.0
                 }
                 if(pt.id == "beat4")
                 {
-                    kick_on_off[3] = 0
+                    kick_on_off[3] = 0.0
                 }
                 if(pt.id == "beat5")
                 {
-                    kick_on_off[4] = 0
+                    kick_on_off[4] = 0.0
                 }
 
                 if(pt.id == "beat6")
                 {
-                    kick_on_off[5] = 0
+                    kick_on_off[5] = 0.0
                 }
                 if(pt.id == "beat7")
                 {
-                    kick_on_off[6] = 0
+                    kick_on_off[6] = 0.0
                 }
 
                 if(pt.id == "beat8")
                 {
-                    kick_on_off[7] = 0
+                    kick_on_off[7] = 0.0
                 }
                 if(pt.id == "beat9")
                 {
-                    kick_on_off[8] = 0
+                    kick_on_off[8] = 0.0
                 }
 
                 if(pt.id == "beat10")
                 {
-                    kick_on_off[9] = 0
+                    kick_on_off[9] = 0.0
                 }
                 if(pt.id == "beat11")
                 {
-                    kick_on_off[10] = 0
+                    kick_on_off[10] = 0.0
                 }
                 if(pt.id == "beat12")
                 {
-                    kick_on_off[11] = 0
+                    kick_on_off[11] = 0.0
                 }
 
                 if(pt.id == "beat13")
                 {
-                    kick_on_off[12] = 0
+                    kick_on_off[12] = 0.0
                 }
                 if(pt.id == "beat14")
                 {
-                    kick_on_off[13] = 0
+                    kick_on_off[13] = 0.0
                 }
 
                 if(pt.id == "beat15")
                 {
-                    kick_on_off[14] = 0
+                    kick_on_off[14] = 0.0
                 }
                 if(pt.id == "beat16")
                 {
-                    kick_on_off[15] = 0
+                    kick_on_off[15] = 0.0
                 }
+                test_view.innerText = kick_on_off
             }
             // console.log(kick_on_off)
         }
@@ -331,7 +338,7 @@
             }
             test_channel1 = ctx.createGain()
             test_channel1.connect(ctx.destination)
-            test_channel1.gain.value = 1
+            test_channel1.gain.value = 1.0
             osc_test.connect(test_channel1)
             osc_test.type = "sine"
             osc_test.frequency.value = 440
@@ -345,8 +352,8 @@
         function play()
         {
             index += 1
-            test_channel1.gain.value = parseFloat(kick_on_off[index])
-            if(index == 16)
+            test_channel1.gain.value = kick_on_off[index]
+            if(index > 16)
             {
                 index = 1
             }
@@ -361,7 +368,7 @@
     // 测试代码
     var gainNode = ctx.createGain()
     gainNode.connect(ctx.destination)
-    gainNode.gain.value = parseFloat("1")
+    gainNode.gain.value = 1.0
     var osc 
     function trig()
     {
