@@ -1,0 +1,17 @@
+#roteDisplay
+{
+    width: 500px;
+    height: 500px;
+    background-color: black;
+    display: inline-block;
+}
+.moduleNode
+{
+    border: solid 1px white;
+    display: inline-block;
+    width: fit-content;
+    height: fit-content;
+    background-color: aqua;
+    font-weight: bold;
+    color: white;
+}
