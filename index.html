@@ -101,6 +101,75 @@
         <label for="">音量</label>
         <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
         <div id="bt-wrapper">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </div>
+    </div>
+    <div id="instrument2">
+        <span class="name">Clap</span>
+        <label for="">音量</label>
+        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
+        <div id="bt-wrapper2">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </div>
+    </div>
+    <div id="instrument3">
+        <span class="name">Hihat</span>
+        <label for="">音量</label>
+        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
+        <div id="bt-wrapper3">
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </div>
+    </div>
+    <div id="instrument4">
+        <span class="name">Snare</span>
+        <label for="">音量</label>
+        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
+        <div id="bt-wrapper4">
             <button id="beat1"></button>
             <button id="beat2"></button>
             <button id="beat3"></button>
@@ -119,13 +188,13 @@
             <button id="beat16"></button>
         </div>
     </div>
-    <h2>调音台</h2>
+    <!-- <h2>调音台</h2>
     <div class="mixer">
         <div class="slide-wrapper">
             <div class="slider"></div>
         </div>
         <span>音量:100</span>
-    </div>
+    </div> -->
     <div class="mixer">
         <div class="slide-wrapper">
             <div class="slider"></div>
@@ -151,7 +220,22 @@
     <!-- 底层音频节点路由图组件 -->
     <span>音频路由图</span>
     <div id="roteDisplay">
+        <div class="moduleNode">Kick Sampler</div>
+        <div class="moduleNode">-></div>
+        <div class="moduleNode">Gain Node</div>
+        <div class="moduleNode">AudioDestinationNode(output)</div>
+        
         <div class="moduleNode">Clap Sampler</div>
+        <div class="moduleNode">-></div>
+        <div class="moduleNode">Gain Node</div>
+        <div class="moduleNode">AudioDestinationNode(output)</div>
+        
+        <div class="moduleNode">HiHat Sampler</div>
+        <div class="moduleNode">-></div>
+        <div class="moduleNode">Gain Node</div>
+        <div class="moduleNode">AudioDestinationNode(output)</div>
+        
+        <div class="moduleNode">Snare Sampler</div>
         <div class="moduleNode">-></div>
         <div class="moduleNode">Gain Node</div>
         <div class="moduleNode">AudioDestinationNode(output)</div>
@@ -163,7 +247,13 @@
     <canvas class="osc-view" width="200px" height="100px"></canvas>
     <script>
         // 全局变量
-        var ctx= new AudioContext()
+        var ctx = new AudioContext()
+    </script>
+    <script src="preload.js"></script>
+    <script src="js/browser.js"></script>
+    <script src="js/oscDisplay.js"></script>
+    <script>
+        
         // 从开始播放按钮按下往后记录
         var startTimes = 0
         // 按下播放后，满60进一
@@ -174,8 +264,10 @@
         const MouseRight = 2
         const MouseLeft = 0
         // 组件变量
-        var kick_on_off = new Float32Array(16)//[0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0]
-        console.log(kick_on_off)
+        var drum_on_off = new Float32Array(16)//[0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0]
+        var drum_on_off2 = new Float32Array(16)
+        var drum_on_off3 = new Float32Array(16)
+        var drum_on_off4 = new Float32Array(16)
         // timer index
         var main_looper
         var main_timer
@@ -183,176 +275,71 @@
         // 组件初始化
         const view_bpm = document.getElementById("view_bpm")
         const bt_wrapper = document.getElementById("bt-wrapper")
-        const childs = bt_wrapper.children
+        const bt_wrapper2 = document.getElementById("bt-wrapper2")
+        const bt_wrapper3 = document.getElementById("bt-wrapper3")
+        const bt_wrapper4 = document.getElementById("bt-wrapper4")
+        const channel_rack1_drumbuttons = bt_wrapper.children
+        const channel_rack2_drumbuttons = bt_wrapper2.children
+        const channel_rack3_drumbuttons = bt_wrapper3.children
+        const channel_rack4_drumbuttons = bt_wrapper4.children
         const test_view = document.getElementById("test-view")
         const timer = document.getElementById("timer")
-        // console.log(childs)
-        // 事件初始化
-        for(var i=0;i<childs.length;i++)
+        // 通道机架事件初始化
+        for(var i=0;i<channel_rack1_drumbuttons.length;i++)
         {
-           var e_button = childs[i]
+           var e_button = channel_rack1_drumbuttons[i]
+           e_button.addEventListener("mousedown",on_pad_down)
+           e_button.addEventListener("contextmenu",on_pad_context)
+        }
+        for(var i=0;i<channel_rack2_drumbuttons.length;i++)
+        {
+           var e_button = channel_rack2_drumbuttons[i]
+           e_button.addEventListener("mousedown",on_pad_down)
+           e_button.addEventListener("contextmenu",on_pad_context)
+        }
+        for(var i=0;i<channel_rack3_drumbuttons.length;i++)
+        {
+           var e_button = channel_rack3_drumbuttons[i]
+           e_button.addEventListener("mousedown",on_pad_down)
+           e_button.addEventListener("contextmenu",on_pad_context)
+        }
+        for(var i=0;i<channel_rack4_drumbuttons.length;i++)
+        {
+           var e_button = channel_rack4_drumbuttons[i]
            e_button.addEventListener("mousedown",on_pad_down)
            e_button.addEventListener("contextmenu",on_pad_context)
         }
         function on_pad_down(event)
         {
-            event.target.style = "background-color:red"
-            var pt = event.target
-            // console.log(event)
             if(event.button == MouseLeft)
             {
-                if(pt.id == "beat1")
-                {
-                    kick_on_off[0] = 1.0
-                }
-                if(pt.id == "beat2")
-                {
-                    kick_on_off[1] = 1.0
-                }
-                if(pt.id == "beat3")
-                {
-                    kick_on_off[2] = 1.0
-                }
-                if(pt.id == "beat4")
-                {
-                    kick_on_off[3] = 1.0
-                }
-                if(pt.id == "beat5")
-                {
-                    kick_on_off[4] = 1.0
-                    event.target.style = "background-color:green"
-                }
-                if(pt.id == "beat6")
-                {
-                    kick_on_off[5] = 1.0
-                }
-                if(pt.id == "beat7")
-                {
-                    kick_on_off[6] = 1.0
-                }
-                if(pt.id == "beat8")
-                {
-                    kick_on_off[7] = 1.0
-                }
-
-                if(pt.id == "beat9")
-                {
-                    kick_on_off[8] = 1.0
-                }
-                if(pt.id == "beat10")
-                {
-                    kick_on_off[9] = 1.0
-                }
-                if(pt.id == "beat11")
-                {
-                    kick_on_off[10] = 1.0
-                }
-                if(pt.id == "beat12")
-                {
-                    kick_on_off[11] = 1.0
-                }
-
-                if(pt.id == "beat13")
-                {
-                    kick_on_off[12] = 1.0
-                    event.target.style = "background-color:green"
-                }
-                if(pt.id == "beat14")
-                {
-                    kick_on_off[13] = 1.0
-                }
-                if(pt.id == "beat15")
-                {
-                    kick_on_off[14] = 1.0
-                }
-                if(pt.id == "beat16")
-                {
-                    kick_on_off[15] = 1.0
-                }
-                test_view.innerText = kick_on_off
                 
+                var children = event.target.parentNode.children
+                
+                for(var index=0; index < children.length; index++)
+                {
+                    children.item(index).addEventListener("mousedown",(event)=>
+                    {
+                        var cur_child = event.target
+                        var index = Array.prototype.indexOf.call(children,cur_child)
+                        if(index == 4)
+                        {
+                            event.target.style = "background-color:green"
+                        }
+                        else if(index == 12)
+                        {
+                            event.target.style = "background-color:green"
+                        }
+                        else
+                        {
+                            event.target.style = "background-color:red"
+                        }
+                        // console.log(index);
+                        drum_on_off2[index] = 1
+                        test_view.innerText = drum_on_off2
+                    })
+                }
             }
-            if(event.button == MouseRight)
-            {
-                if(pt.id == "beat1")
-                {
-                    kick_on_off[0] = 0.0
-                }
-                if(pt.id == "beat2")
-                {
-                    kick_on_off[1] = 0.0
-                }
-                if(pt.id == "beat3")
-                {
-                    kick_on_off[2] = 0.0
-                }
-                if(pt.id == "beat4")
-                {
-                    kick_on_off[3] = 0.0
-                }
-                if(pt.id == "beat5")
-                {
-                    kick_on_off[4] = 0.0
-                }
-
-                if(pt.id == "beat6")
-                {
-                    kick_on_off[5] = 0.0
-                }
-                if(pt.id == "beat7")
-                {
-                    kick_on_off[6] = 0.0
-                }
-
-                if(pt.id == "beat8")
-                {
-                    kick_on_off[7] = 0.0
-                }
-                if(pt.id == "beat9")
-                {
-                    kick_on_off[8] = 0.0
-                }
-
-                if(pt.id == "beat10")
-                {
-                    kick_on_off[9] = 0.0
-                }
-                if(pt.id == "beat11")
-                {
-                    kick_on_off[10] = 0.0
-                }
-                if(pt.id == "beat12")
-                {
-                    kick_on_off[11] = 0.0
-                }
-
-                if(pt.id == "beat13")
-                {
-                    kick_on_off[12] = 0.0
-                }
-                if(pt.id == "beat14")
-                {
-                    kick_on_off[13] = 0.0
-                }
-
-                if(pt.id == "beat15")
-                {
-                    kick_on_off[14] = 0.0
-                }
-                if(pt.id == "beat16")
-                {
-                    kick_on_off[15] = 0.0
-                }
-                test_view.innerText = kick_on_off
-            }
-            // console.log(kick_on_off)
-        }
-        // 需要修复
-        function get_self_index_at_parent(p_target)
-        {
-            var wrapper = p_target.parentNode
-            var index = Array.prototype.indexOf.call(wrapper,p_target)
-            console.log(index)
         }
         function on_pad_context(event)
         {
@@ -379,27 +366,8 @@
             bpm-=1
             view_bpm.value = bpm
         }
-        // 创建工作 物理接线应该在开始演出之前完成
-        var osc_test
-        var test_channel1
-        function init_connect()
-        {
-            var osc = ctx.createOscillator()
-            osc_test = osc
-            var ins1 = {
-                "type":"osc"
-            }
-            test_channel1 = ctx.createGain()
-            test_channel1.connect(ctx.destination)
-            test_channel1.gain.value = 1.0
-            osc_test.connect(test_channel1)
-            osc_test.type = "sine"
-            osc_test.frequency.value = 440
-        }
-        init_connect()
         function start_play()
         {
-            osc_test.start()
             play()
             start_timer()
         }
@@ -419,8 +387,39 @@
         }
         function play()
         {
-            console.log("times: " + index  +" on/off: " + kick_on_off[index])
-            test_channel1.gain.value = kick_on_off[index]
+            console.log(index)
+            // console.log("times: " + index  +" on/off: " + drum_on_off[index])
+            // console.log("times: " + index  +" on/off: " + drum_on_off2[index])
+            // console.log("times: " + index  +" on/off: " + drum_on_off3[index])
+            // console.log("times: " + index  +" on/off: " + drum_on_off4[index])
+            if(drum_on_off[index] == 1)
+            {
+                var kickBufferNode = ctx.createBufferSource()
+                kickBufferNode.buffer = kick_buffer
+                kickBufferNode.connect(ctx.destination)
+                kickBufferNode.start()
+            }
+            if(drum_on_off2[index] == 1)
+            {
+                var clapBufferNoed = ctx.createBufferSource()
+                clapBufferNoed.buffer = clap_buffer
+                clapBufferNoed.connect(ctx.destination)
+                clapBufferNoed.start()
+            }
+            if(drum_on_off3[index] == 1)
+            {
+                var hihatBufferNode = ctx.createBufferSource()
+                hihatBufferNode.buffer = hihat_buffer
+                hihatBufferNode.connect(ctx.destination)
+                hihatBufferNode.start()
+            }
+            if(drum_on_off4[index] == 1)
+            {
+                var snareBufferNode = ctx.createBufferSource()
+                snareBufferNode.buffer = snare_buffer
+                snareBufferNode.connect(ctx.destination)
+                snareBufferNode.start()
+            }
             if(index > 14)
             {
                 index = -1
@@ -432,6 +431,7 @@
     function stop()
     {
         clearTimeout(main_looper)
+        index = 0
         clear_counted_times()
         
     }
@@ -465,7 +465,7 @@
     }
 
     </script>
-  <script src="js/browser.js"></script>
-  <script src="js/oscDisplay.js"></script>
+    
+  
 </body>
 </html>
