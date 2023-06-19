@@ -2,14 +2,15 @@
 export default {
   data() {
     return {
-      count: 0
+      bpm: 130
     }
   }
 }
 </script>
 
 <template>
-  <button @click="count++">
-    You clicked me {{ count }} times.
-  </button>
+    <span>bpm</span>
+    <input :value="bpm" type="number" min="10" max="240"/>
+    <button @click="bpm++">节奏+</button>
+    <button @click="bpm--">节奏-</button>
 </template>
