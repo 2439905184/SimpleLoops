@@ -31,41 +31,10 @@
         </div>
         <div class="content">
                 <!-- topbar -->
-            <div class="hbox">
-                <button>音频浏览器开关</button>
-                <button onclick="start_play()">开始</button>
-                <button onclick="stop()">停止</button>
-                
-                <button onclick="trig()">触发测试</button>
-                <button onclick="stop_trig()">停止触发测试</button>
-                <button>调音台开关</button>
-                <span id="timer">00:00</span>
-            </div>
+            
     <canvas id="osc-display" width="40px" height="20px"></canvas>
     <div id="test-view">{{测试view}}</div>
-    <div id="instrument1">
-        <span class="name">Kick</span>
-        <label for="">音量</label>
-        <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
-        <div id="bt-wrapper">
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-            <button></button>
-        </div>
-    </div>
+    
     <div id="instrument2">
         <span class="name">Clap</span>
         <label for="">音量</label>
@@ -228,9 +197,7 @@
             var calcuated_min = 0
             var bpm = 130
             var interval = 60000 / bpm
-            // 鼠标事件
-            const MouseRight = 2
-            const MouseLeft = 0
+            
             // 组件变量
             var drum_on_off = new Float32Array(16)//[0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0, 0.0,0.0,0.0,0.0]
             var drum_on_off2 = new Float32Array(16)
@@ -282,38 +249,7 @@
             e_button.addEventListener("contextmenu",on_pad_context)
             }
 
-            function on_pad_down(event)
-            {
-                if(event.button == MouseLeft)
-                {
-                    
-                    var children = event.target.parentNode.children
-                    
-                    for(var index=0; index < children.length; index++)
-                    {
-                        children.item(index).addEventListener("mousedown",(event)=>
-                        {
-                            var cur_child = event.target
-                            var index = Array.prototype.indexOf.call(children,cur_child)
-                            if(index == 4)
-                            {
-                                event.target.style = "background-color:green"
-                            }
-                            else if(index == 12)
-                            {
-                                event.target.style = "background-color:green"
-                            }
-                            else
-                            {
-                                event.target.style = "background-color:red"
-                            }
-                            // console.log(index);
-                            drum_on_off2[index] = 1
-                            test_view.innerText = drum_on_off2
-                        })
-                    }
-                }
-            }
+            
             function on_pad_context(event)
             {
                 event.target.style = "background-color:none"
@@ -339,73 +275,13 @@
             bpm-=1
             view_bpm.value = bpm
         }
-        function start_play()
-        {
-            play()
-            start_timer()
-        }
-        function start_timer()
-        {
-            startTimes+=1
-            // 60倍数
-            if(startTimes%60 ==0)
-            {
-                startTimes = 0
-                calcuated_min+=1
-            }
-            main_timer = setTimeout(() => {
-                timer.innerText = calcuated_min + ":" + startTimes
-                start_timer()
-            }, 1000);
-        }
+        
         var kickBufferNode = ctx.createBufferSource()
         var clapBufferNoed = ctx.createBufferSource()
         var hihatBufferNode = ctx.createBufferSource()
         var snareBufferNode = ctx.createBufferSource()
         // console.log(kick_buffer);
-        function play()
-        {
-            // console.log(index)
-            // console.log("times: " + index  +" on/off: " + drum_on_off[index])
-            // console.log("times: " + index  +" on/off: " + drum_on_off2[index])
-            // console.log("times: " + index  +" on/off: " + drum_on_off3[index])
-            // console.log("times: " + index  +" on/off: " + drum_on_off4[index])
-            if(drum_on_off[index] == 1)
-            {
-                console.log(kick_buffer);
-                kickBufferNode.buffer = kick_buffer
-                kickBufferNode.connect(ctx.destination)
-                kickBufferNode.start()
-            }
-            if(drum_on_off2[index] == 1)
-            {
-                
-                clapBufferNoed.buffer = clap_buffer
-                clapBufferNoed.connect(ctx.destination)
-                clapBufferNoed.start()
-            }
-            if(drum_on_off3[index] == 1)
-            {
-                
-                hihatBufferNode.buffer = hihat_buffer
-                hihatBufferNode.connect(ctx.destination)
-                hihatBufferNode.start()
-            }
-            if(drum_on_off4[index] == 1)
-            {
-                
-                snareBufferNode.buffer = snare_buffer
-                snareBufferNode.connect(ctx.destination)
-                snareBufferNode.start()
-            }
-            if(index > 14)
-            {
-                index = -1
-            }
-            index += 1
-            main_looper = setTimeout(play, interval);
-            
-        }
+        
         function stop()
     {
         clearTimeout(main_looper)
