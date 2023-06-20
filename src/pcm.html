@@ -1,0 +1,261 @@
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<style>
+    .synth
+    {
+      border: solid 2px black;
+    }
+    .synth >h2
+    {
+      display: inline;
+    }
+    .synth >#led
+    {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background-color: red;
+    }
+    .octave-start
+    {
+      background-color: grey;
+
+    }
+    .black
+    {
+      background-color: black;
+      color: white;
+    }
+    .white
+    {
+      background-color: #a5cfd5;
+    }
+    .piano-window >div
+    {
+      display: inline-block;
+      width: 30px;
+      height: 40px;
+    }
+    .piano-window >div:hover
+    {
+      cursor: pointer;
+    }
+    #audio-title
+    {
+      border: solid 1px black;
+      width: 100px
+    }
+    h1,h2,h3
+    {
+      margin: 0;
+    }
+    </style>
+    <div class="synth">
+      <h2>PcmSynth</h2>
+      <div>
+        <h3>音色选择</h3>
+        <div id="audio-title">Basic 808 Clap</div>
+        <button id="sound-add">+</button>
+        <button id="sound-min">-</button>
+        <button id="play-preview">播放采样</button>
+      </div>
+      
+
+      <div>
+        <!-- <h2>滤波器</h2> -->
+        <!-- <div>cutoff</div> -->
+        <div class="piano-window">
+          <div class="octave-start">c3</div>
+          <div class="black">c3#</div>
+          <div class="white">d3</div>
+          <div class="black">d3#</div>
+          <div class="white">e3</div>
+          <div class="white">f3</div>
+          <div class="black">f3#</div>
+          <div class="white">g3</div>
+          <div class="black">g3#</div>
+          <div class="white">a3</div>
+          <div class="black">a3#</div>
+          <div class="white">b3</div>
+
+          <div class="octave-start">c4</div>
+          <div class="black">c4#</div>
+          <div class="white">d4</div>
+          <div class="black">d4#</div>
+          <div class="white">e4</div>
+          <div class="white">f4</div>
+          <div class="black">f4#</div>
+          <div class="white">g4</div>
+          <div class="black">g4#</div>
+          <div class="white">a4</div>
+          <div class="black">a4#</div>
+          <div class="white">b4</div>
+
+          <div class="octave-start">c5</div>
+          <div class="black">c5#</div>
+          <div class="white">d5</div>
+          <div class="black">d5#</div>
+          <div class="white">e5</div>
+          <div class="white">f5</div>
+          <div class="black">f5#</div>
+          <div class="white">g5</div>
+          <div class="black">a5#</div>
+          <div class="white">a5</div>
+          <div class="black">a5#</div>
+          <div class="white">b5</div>
+        </div>
+        <!-- <audio id="audio" src="assets/gun.wav" controls></audio> -->
+    </div>
+
+    <script>
+      alert("请先通过选择器选择音色")
+      var sampler_rate
+      var sounds = ["Basic 808 Clap.wav","Basic 808 HiHat.wav","Basic 808 Kick.wav", "Basic 808 Snare.wav","gun.wav"]
+      var cur_sound_bank_index = 0
+      var sampler_buffer
+      var ctx = new AudioContext()
+      var sampler = ctx.createBufferSource()
+      sampler.connect(ctx.destination)
+      // const audio = document.getElementById("audio")
+      const sound_add = document.getElementById("sound-add")
+      const sound_min = document.getElementById("sound-min")
+      const audio_title = document.getElementById("audio-title")
+      const play_preview = document.getElementById("play-preview")
+
+      sound_add.addEventListener("mousedown",sound_choose_event)
+      sound_min.addEventListener("mousedown",sound_choose_event)
+      
+      play_preview.addEventListener("mousedown",(event)=>
+      {
+        replay_sound()
+      })
+      function sound_choose_event(event)
+      {
+        var tg = event.target
+        if(tg.id == "sound-add")
+        {
+          if(cur_sound_bank_index<sounds.length-1)
+          {
+            cur_sound_bank_index+=1
+            var t = sounds[cur_sound_bank_index]
+            audio_title.innerText = t
+            // console.log(sounds);
+            request_sound("assets/" + t)
+          }
+        }
+        if(tg.id == "sound-min")
+        {
+          if(cur_sound_bank_index>0)
+          {
+            cur_sound_bank_index-=1
+            var t = sounds[cur_sound_bank_index]
+            audio_title.innerText = sounds[cur_sound_bank_index]
+            request_sound("assets/" + t)
+          }
+        }
+      }
+      
+      const piano_window = document.getElementsByClassName("piano-window").item(0)
+      
+      for(var i=0;i<piano_window.children.length;i++)
+      {
+        var reset_style
+        var e = piano_window.children.item(i)
+        // console.log(e);
+        e.addEventListener("mousedown",(event)=>
+        {
+          
+          var tg = event.target
+          reset_style = event.target.style
+          tg.style = "background-color:yellow"
+          if(tg.innerText == "c3")
+          {
+            sampler_rate = 0.2
+          }
+          if(tg.innerText == "c3#")
+          {
+            sampler_rate = 0.3
+          }
+          if(tg.innerText == "c3#")
+          {
+            sampler_rate = 0.4
+          }
+          if(tg.innerText == "c3#")
+          {
+            sampler_rate = 0.5
+          }
+
+          if(tg.innerText == "c3")
+          {
+            
+          }
+          if(tg.innerText == "c3#")
+          {
+           
+          }
+          if(tg.innerText == "c3#")
+          {
+           
+          }
+          if(tg.innerText == "c3#")
+          {
+            
+          }
+
+          if(tg.innerText == "c3")
+          {
+
+          }
+          if(tg.innerText == "c3#")
+          {
+            
+          }
+          if(tg.innerText == "c3#")
+          {
+            
+          }
+          if(tg.innerText == "c3#")
+          {
+            
+          }
+          var cur_sound = sounds[cur_sound_bank_index]
+          replay_sound("assets/" + cur_sound)
+        })
+        e.addEventListener("mouseup",(event)=>
+        {
+          var tg = event.target
+          tg.style = reset_style
+        })
+      }
+      function request_sound(url)
+      {
+        var rq = new XMLHttpRequest()
+        rq.responseType="arraybuffer"
+        rq.open("GET",url)
+        rq.onload = function(event)
+        {
+            ctx.decodeAudioData(rq.response,function(data)
+            {
+              sampler_buffer = data
+              console.log(data);
+            })
+          // console.log(rq.response)
+        }
+        rq.send()
+      }
+      function replay_sound()
+      {
+          sampler = ctx.createBufferSource()
+          sampler.connect(ctx.destination)
+          sampler.buffer = sampler_buffer
+          sampler.playbackRate = sampler_rate
+          sampler.start()
+          var status = {
+            "title":"replayed",
+            "playbackValue":sampler_rate,
+            "buffer":sampler_buffer
+          }
+          console.log(status);
+          
+      }
+   </script>
