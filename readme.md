@@ -5,4 +5,6 @@
 npm install
 npm run dev
 npm run build
+cd ..
+npx http-server
 ```
