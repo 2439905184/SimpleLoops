@@ -91,6 +91,6 @@
     <InstrumentTrack name="slap"/>
     <InstrumentTrack name="hihat"/>
     <InstrumentTrack name="snare"/>
-    <Knob/>
-    <VerticalSlider/>
+    <!-- <Knob/> -->
+    <!-- <VerticalSlider/> -->
 </template>

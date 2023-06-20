@@ -54,10 +54,19 @@
       <h2>PcmSynth</h2>
       <div>
         <h3>音色选择</h3>
-        <div id="audio-title">Basic 808 Clap</div>
+        <div id="audio-title">PianoC3.wav</div>
         <button id="sound-add">+</button>
         <button id="sound-min">-</button>
         <button id="play-preview">播放采样</button>
+
+        <button>钢琴</button>
+        <button>电吉他</button>
+        <button>羽管键琴</button>
+        <button>音乐盒</button>
+        <button>单簧管</button>
+        <button>小提琴</button>
+        <button>五弦琴</button>
+        <button>双簧管</button>
       </div>
       
 
@@ -99,7 +108,7 @@
           <div class="white">f5</div>
           <div class="black">f5#</div>
           <div class="white">g5</div>
-          <div class="black">a5#</div>
+          <div class="black">g5#</div>
           <div class="white">a5</div>
           <div class="black">a5#</div>
           <div class="white">b5</div>
@@ -108,9 +117,9 @@
     </div>
 
     <script>
-      alert("请先通过选择器选择音色")
+      alert("请选择音色再播放")
       var sampler_rate
-      var sounds = ["Basic 808 Clap.wav","Basic 808 HiHat.wav","Basic 808 Kick.wav", "Basic 808 Snare.wav","gun.wav"]
+      var sounds = ["PianoC3.wav","Basic 808 Clap.wav","Basic 808 HiHat.wav","Basic 808 Kick.wav", "Basic 808 Snare.wav"]
       var cur_sound_bank_index = 0
       var sampler_buffer
       var ctx = new AudioContext()
@@ -168,58 +177,154 @@
           var tg = event.target
           reset_style = event.target.style
           tg.style = "background-color:yellow"
+          // MIDI C3 48
           if(tg.innerText == "c3")
           {
-            sampler_rate = 0.2
+            replay_sound_at_rate(48,48)
           }
           if(tg.innerText == "c3#")
           {
-            sampler_rate = 0.3
+            replay_sound_at_rate(48,49)
           }
-          if(tg.innerText == "c3#")
+          if(tg.innerText == "d3")
           {
-            sampler_rate = 0.4
+            replay_sound_at_rate(48,50)
           }
-          if(tg.innerText == "c3#")
+          if(tg.innerText == "d3#")
           {
-            sampler_rate = 0.5
+            replay_sound_at_rate(48,51)
+          }
+          if(tg.innerText == "e3")
+          {
+            replay_sound_at_rate(48,52)
+          }
+          if(tg.innerText == "f3")
+          {
+            replay_sound_at_rate(48,53)
+          }
+          if(tg.innerText == "f3#")
+          {
+            replay_sound_at_rate(48,54)
+          }
+          if(tg.innerText == "g3")
+          {
+            replay_sound_at_rate(48,55)
+          }
+          if(tg.innerText == "g3#")
+          {
+            replay_sound_at_rate(48,56)
+          }
+          if(tg.innerText == "a3")
+          {
+            replay_sound_at_rate(48,57)
+          }
+          if(tg.innerText == "a3#")
+          {
+            replay_sound_at_rate(48,58)
+          }
+          if(tg.innerText == "b3")
+          {
+            replay_sound_at_rate(48,59)
           }
 
-          if(tg.innerText == "c3")
+          if(tg.innerText == "c4")
           {
-            
+            replay_sound_at_rate(48,60)
           }
-          if(tg.innerText == "c3#")
+          if(tg.innerText == "c4#")
           {
-           
+            replay_sound_at_rate(48,61)
           }
-          if(tg.innerText == "c3#")
+          if(tg.innerText == "d4")
           {
-           
+            replay_sound_at_rate(48,62)
           }
-          if(tg.innerText == "c3#")
+          if(tg.innerText == "d4#")
           {
-            
+            replay_sound_at_rate(48,63)
+          }
+          if(tg.innerText == "e4")
+          {
+            replay_sound_at_rate(48,64)
+          }
+          if(tg.innerText == "f4")
+          {
+            replay_sound_at_rate(48,65)
+          }
+          if(tg.innerText == "f4#")
+          {
+            replay_sound_at_rate(48,66)
+          }
+          if(tg.innerText == "g4")
+          {
+            replay_sound_at_rate(48,67)
+          }
+          if(tg.innerText == "g4#")
+          {
+            replay_sound_at_rate(48,68)
+          }
+          if(tg.innerText == "a4")
+          {
+            replay_sound_at_rate(48,69)
+          }
+          if(tg.innerText == "a4#")
+          {
+            replay_sound_at_rate(48,70)
+          }
+          if(tg.innerText == "b4")
+          {
+            replay_sound_at_rate(48,71)
           }
 
-          if(tg.innerText == "c3")
+          if(tg.innerText == "c5")
           {
+            replay_sound_at_rate(48,72)
+          }
+          if(tg.innerText == "c5#")
+          {
+            replay_sound_at_rate(48,73)
+          }
+          if(tg.innerText == "d5")
+          {
+            replay_sound_at_rate(48,74)
+          }
+          if(tg.innerText == "d5#")
+          {
+            replay_sound_at_rate(48,75)
+          }
+          if(tg.innerText == "e5")
+          {
+            replay_sound_at_rate(48,76)
+          }
+          if(tg.innerText == "f5")
+          {
+            replay_sound_at_rate(48,77)
+          }
+          if(tg.innerText == "f5#")
+          {
+            replay_sound_at_rate(48,78)
+          }
+          if(tg.innerText == "g5")
+          {
+            replay_sound_at_rate(48,79)
+          }
+          if(tg.innerText == "g5#")
+          {
+            replay_sound_at_rate(48,80)
+          }
+          if(tg.innerText == "a5")
+          {
+            replay_sound_at_rate(48,81)
+          }
+          if(tg.innerText == "a5#")
+          {
+            replay_sound_at_rate(48,82)
+          }
+          if(tg.innerText == "b5")
+          {
+            replay_sound_at_rate(48,83)
+          }
 
-          }
-          if(tg.innerText == "c3#")
-          {
-            
-          }
-          if(tg.innerText == "c3#")
-          {
-            
-          }
-          if(tg.innerText == "c3#")
-          {
-            
-          }
-          var cur_sound = sounds[cur_sound_bank_index]
-          replay_sound("assets/" + cur_sound)
         })
         e.addEventListener("mouseup",(event)=>
         {
@@ -227,6 +332,7 @@
           tg.style = reset_style
         })
       }
+
       function request_sound(url)
       {
         var rq = new XMLHttpRequest()
@@ -243,12 +349,12 @@
         }
         rq.send()
       }
+      // 回放用
       function replay_sound()
       {
           sampler = ctx.createBufferSource()
           sampler.connect(ctx.destination)
           sampler.buffer = sampler_buffer
-          sampler.playbackRate = sampler_rate
           sampler.start()
           var status = {
             "title":"replayed",
@@ -257,5 +363,22 @@
           }
           console.log(status);
           
+      }
+      // 调音回放 技术参考https://zpl.fi/pitch-shifting-in-web-audio-api/
+      function replay_sound_at_rate(sampleNote, noteToPlay)
+      {
+          sampler = ctx.createBufferSource(sampleNote)
+          sampler.buffer = sampler_buffer
+          let rate = parseFloat(2**((noteToPlay - sampleNote)/12))
+          sampler.playbackRate.value = rate
+          sampler.connect(ctx.destination)
+          sampler.start()
+          var status = {
+            "title":"replayed",
+            "playbackValue":rate,
+            "playNote":noteToPlay,
+            "buffer":sampler_buffer
+          }
+          console.log(status);
       }
    </script>
