@@ -264,18 +264,6 @@
                 bpm=view_bpm.value
                 console.log("bpm" + view_bpm.value)
             })
-             // 外部组件事件
-        function faster()
-        {
-            bpm+=1
-            view_bpm.value =bpm
-        }
-        function slower()
-        {
-            bpm-=1
-            view_bpm.value = bpm
-        }
-        
         var kickBufferNode = ctx.createBufferSource()
         var clapBufferNoed = ctx.createBufferSource()
         var hihatBufferNode = ctx.createBufferSource()
@@ -293,23 +281,6 @@
     {
         timer.innerText = "00:00"
         clearTimeout(main_timer)
-    }
-    // 测试代码
-    var gainNode = ctx.createGain()
-    gainNode.connect(ctx.destination)
-    gainNode.gain.value = 1.0
-    var osc 
-    function trig()
-    {
-            osc=ctx.createOscillator()
-            osc.connect(gainNode)
-            osc.type = "sine"
-            osc.frequency.value = 440
-            osc.start()
-    }
-    function stop_trig()
-    {
-        osc.stop()
     }
 }
        
