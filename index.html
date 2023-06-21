@@ -9,14 +9,25 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
-    <h1>内插琴</h1>
-    <!-- <script>
-      document.addEventListener("contextmenu",function(event)
+
+    <span>乐器系列</span>
+    <a href="/SimpleLoops/src/pcm.html">PcmSynth</a>
+    <script>
+      var ctx = new AudioContext()
+      var rq = new XMLHttpRequest()
+      var kick_buffer 
+      rq.responseType ="arraybuffer"
+      rq.open("GET","/src/assets/Basic 808 Kick.wav")
+      rq.onload = function(event)
       {
-        console.debug("不能右键")
-        event.stopPropagation()
-      })
-    </script> -->
-    <iframe src="/SimpleLoops/src/pcm.html" frameborder="0" width="1920px" height="1080px"></iframe>
+        ctx.decodeAudioData(rq.response,(data)=>
+        {
+          kick_buffer = data
+          console.log(kick_buffer);
+        })
+      }
+      rq.send()
+      window.tick_index = 0
+    </script>
   </body>
 </html>
