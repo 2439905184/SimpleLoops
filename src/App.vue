@@ -26,8 +26,44 @@
             var kickSample = window.ctx.createBufferSource()
             kickSample.buffer = window.kick_buffer
             kickSample.connect(ctx.destination)
-            kickSample.start()
-            console.log(window.tick_index)
+
+            var snareSample = window.ctx.createBufferSource()
+            snareSample.buffer = window.snare_buffer
+            snareSample.connect(ctx.destination)
+
+            var clapSample = window.ctx.createBufferSource()
+            clapSample.buffer = window.clap_buffer
+            clapSample.connect(ctx.destination)
+
+            var hihatSample = window.ctx.createBufferSource()
+            hihatSample.buffer = window.hihat_buffer
+            hihatSample.connect(ctx.destination)
+            // kickSample.start()
+            
+            
+            var kick_on_off = this.$refs.KickSampleTrack.on_off
+            var snare_on_off = this.$refs.SnareSampleTrack.on_off
+            var hihat_on_off = this.$refs.HihatSampleTrack.on_off
+            var clap_on_off = this.$refs.ClapSampleTrack.on_off
+            console.log("index:" + window.tick_index +  " : "+ clap_on_off)
+            
+            if(kick_on_off[window.tick_index] == 1)
+            {
+                kickSample.start()
+            }
+            if(snare_on_off[window.tick_index] == 1)
+            {
+                snareSample.start()
+            }
+            if(hihat_on_off[window.tick_index] == 1)
+            {
+                hihatSample.start()
+            }
+            if(clap_on_off[window.tick_index] == 1)
+            {
+                clapSample.start()
+            }
+
             if(window.tick_index ==15)
             {
                 window.tick_index = -1
@@ -54,9 +90,9 @@
                 <Timer/>
             </div>
 <div class="track-wrapper">
-    <SampleTrack name="kick"/>
-    <SampleTrack name="slap"/>
-    <SampleTrack name="hihat"/>
-    <SampleTrack name="snare"/>
+    <SampleTrack ref="KickSampleTrack"/>
+    <SampleTrack ref="SnareSampleTrack"/>
+    <SampleTrack ref="HihatSampleTrack"/>
+    <SampleTrack ref="ClapSampleTrack"/>
 </div>
 </template>
