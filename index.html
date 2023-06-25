@@ -16,7 +16,7 @@
     <button id="demo1">demo1</button>
     <button id="demo2">demo2</button>
     <button id="demo3">demo3</button>
-    <audio id="bgm" src="/src/assets/demo1.mp3" controls></audio>
+    <audio id="bgm" src="/SimpleLoops/src/assets/demo1.mp3" controls></audio>
 
     <script>
       document.getElementById("demo1").addEventListener("mousedown",change)
@@ -28,15 +28,15 @@
         var id = event.target.id
         if(id == "demo1")
         {
-          bgmCtl.src = "/src/assets/demo1.mp3"
+          bgmCtl.src = "/SimpleLoops/src/assets/demo1.mp3"
         }
         else if(id == "demo2")
         {
-          bgmCtl.src = "/src/assets/demo2.mp3"
+          bgmCtl.src = "/SimpleLoops/src/assets/demo2.mp3"
         }
         else if(id == "demo3")
         {
-          bgmCtl.src = "/src/assets/demo3.mp3"
+          bgmCtl.src = "/SimpleLoops/src/assets/demo3.mp3"
         }
       }
       var ctx = new AudioContext()
