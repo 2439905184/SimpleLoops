@@ -5,20 +5,105 @@
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vite App</title>
-    <script type="module" crossorigin src="./assets/index-c9264446.js"></script>
-    <link rel="stylesheet" href="./assets/index-85283f15.css">
+    <script type="module" crossorigin src="./assets/index-8672793f.js"></script>
+    <link rel="stylesheet" href="./assets/index-ad47c369.css">
   </head>
   <body>
     <div id="app"></div>
     
-    <h1>内插琴</h1>
-    <!-- <script>
-      document.addEventListener("contextmenu",function(event)
-      {
-        console.debug("不能右键")
-        event.stopPropagation()
-      })
-    </script> -->
+
+    <span>乐器系列</span>
     <a href="/SimpleLoops/src/pcm.html">PcmSynth</a>
+    <p>曲子选择</p>
+    <button id="demo1">demo1</button>
+    <button id="demo2">demo2</button>
+    <button id="demo3">demo3</button>
+    <audio id="bgm" src="/src/assets/demo1.mp3" controls></audio>
+
+    <script>
+      document.getElementById("demo1").addEventListener("mousedown",change)
+      document.getElementById("demo2").addEventListener("mousedown",change)
+      document.getElementById("demo3").addEventListener("mousedown",change)
+      var bgmCtl = document.getElementById("bgm")
+      function change(event)
+      {
+        var id = event.target.id
+        if(id == "demo1")
+        {
+          bgmCtl.src = "/src/assets/demo1.mp3"
+        }
+        else if(id == "demo2")
+        {
+          bgmCtl.src = "/src/assets/demo2.mp3"
+        }
+        else if(id == "demo3")
+        {
+          bgmCtl.src = "/src/assets/demo3.mp3"
+        }
+      }
+      var ctx = new AudioContext()
+      var kick_buffer
+      var clap_buffer
+      var hihat_buffer
+      var snare_buffer
+
+      var kick_rq = new XMLHttpRequest()
+kick_rq.responseType="arraybuffer"
+kick_rq.open("GET","/SimpleLoops/src/assets/Basic 808 Kick.wav")
+kick_rq.onload = function(event)
+{
+    // console.log(event)
+    ctx.decodeAudioData(kick_rq.response,(data)=>
+    {
+        kick_buffer = data
+        console.log(data);
+    })
+}
+kick_rq.send()
+
+var clap_rq = new XMLHttpRequest()
+clap_rq.responseType="arraybuffer"
+clap_rq.open("GET","/SimpleLoops/src/assets/Basic 808 Clap.wav")
+clap_rq.onload = function(event)
+{
+    // console.log(event)
+    ctx.decodeAudioData(clap_rq.response,(data)=>
+    {
+        clap_buffer = data
+        console.log(data);
+    })
+}
+clap_rq.send()
+
+var hihat_rq = new XMLHttpRequest()
+hihat_rq.responseType="arraybuffer"
+hihat_rq.open("GET","/SimpleLoops/src/assets/Basic 808 HiHat.wav")
+hihat_rq.onload = function(event)
+{
+    // console.log(event)
+    ctx.decodeAudioData(hihat_rq.response,(data)=>
+    {
+        hihat_buffer = data
+        console.log(data)
+    })
+}
+hihat_rq.send()
+
+var snare_rq = new XMLHttpRequest()
+snare_rq.responseType="arraybuffer"
+snare_rq.open("GET","/SimpleLoops/src/assets/Basic 808 Snare.wav")
+snare_rq.onload = function(event)
+{
+    // console.log(event)
+    ctx.decodeAudioData(snare_rq.response,(data)=>
+    {
+        snare_buffer = data
+        console.log(data)
+    })
+}
+snare_rq.send()
+
+      window.tick_index = 0
+    </script>
   </body>
 </html>
