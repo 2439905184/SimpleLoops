@@ -10,6 +10,7 @@
     import SampleTrack from "./components/SampleTrack.vue"
     import Knob from "./components/Knob.vue"
     import VerticalSlider from "./components/verticalSlider.vue"
+    import PcmSynth from "./components/pcmsynth.vue"
     export default
     {
     components: 
@@ -90,9 +91,9 @@
                 <Timer/>
             </div>
 <div class="track-wrapper">
-    <SampleTrack ref="KickSampleTrack"/>
-    <SampleTrack ref="SnareSampleTrack"/>
-    <SampleTrack ref="HihatSampleTrack"/>
-    <SampleTrack ref="ClapSampleTrack"/>
+    <SampleTrack ref="KickSampleTrack" title="kick"/>
+    <SampleTrack ref="SnareSampleTrack" title="snare"/>
+    <SampleTrack ref="HihatSampleTrack" title="hihat"/>
+    <SampleTrack ref="ClapSampleTrack" title="clap"/>
 </div>
 </template>

@@ -10,6 +10,7 @@ button
 </style>
 <script>
 export default {
+  props: ["title"],
   data() {
     return {
       on_off: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
@@ -73,7 +74,7 @@ export default {
 </script>
 <template>
     <div class="track">
-        <span></span>
+        <span>{{ title }}</span>
         <span>音量</span>
         <input type="number" value="100" min="0" max="1" onchange="change_vol(this)"/>
         <div class="bt-wrapper">

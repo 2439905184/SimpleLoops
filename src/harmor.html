@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="play()">play</button>
+    <script>
+        const osc_count = 516
+        var ctx = new AudioContext()
+        
+        var osc_nodes = []
+        for(var i=0;i<osc_count+1;i++)
+        {
+            var osc = new OscillatorNode(ctx)
+            osc.type ="sawtooth"
+            osc.frequency = 440
+            if(i==2){osc.frequency = 340}
+            osc_nodes.push(osc)
+            osc.connect(ctx.destination)
+        }
+        function play()
+        {
+            osc.start()
+        }
+    </script>
+</body>
+</html>
