@@ -17,6 +17,10 @@
         {
             Bpm,Timer,SampleTrack,Knob,VerticalSlider
         },
+        data()
+        {
+            return{t1:""}
+        },
     methods:
     {
         start()
@@ -70,14 +74,14 @@
                 window.tick_index = -1
             }
             window.tick_index+=1
-            var t1 = setTimeout(() => {
+            this.t1 = setTimeout(() => {
                 this.start()
             }, tick*1000);
             // console.log(this.$refs.b1.value)
         },
         stop()
         {
-            // clearTimeout(t1)
+            clearTimeout(this.t1)
         }
     }
     }
