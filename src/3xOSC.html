@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3xosc</title>
+    <style>
+    .block
+    {
+        border: solid 1px black;
+    }
+    .octave-start
+    {
+      background-color: grey;
+
+    }
+    .black
+    {
+      background-color: black;
+      color: white;
+    }
+    .white
+    {
+      background-color: #a5cfd5;
+    }
+    .piano-window >div
+    {
+      display: inline-block;
+      width: 30px;
+      height: 40px;
+    }
+    .piano-window >div:hover
+    {
+      cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <div class="block">
+        音色选择
+    <button onclick="change_osc_type('sin')">正弦波</button>
+    <button onclick="change_osc_type('trai')">三角波</button>
+    <button onclick="change_osc_type('square')">方波</button>
+    <button onclick="change_osc_type('saw')">锯齿波</button>
+    
+    </div>
+    <div class="block">
+        参数设置
+        振荡器1失谐度（detune)
+        <input type="range" id="osc1-detune" max="100">
+        振荡器2失谐度(detune)
+        <input type="range" id="osc2-detune" max="200">
+        选择失谐比
+        <!-- 把好听的占比先做成按钮 -->
+        <button onclick="set_ratio(12,21)">12:21</button>
+        <button onclick="set_ratio(41,67)">41:67</button>
+        <button onclick="set_ratio(45,48)">45:48</button>
+    </div>
+    <button onclick="test()">测试</button>
+    <button onclick="stop_test()">停止测试</button>
+    <div class="piano-window">
+        <div class="octave-start">c3</div>
+        <div class="white">d3</div>
+        <div class="white">e3</div>
+        <div class="white">f3</div>
+        <div class="white">g3</div>
+        <div class="white">a3</div>
+        <div class="white">b3</div>
+
+        <div class="octave-start">c4</div>
+        <div class="white">d4</div>
+        <div class="white">e4</div>
+        <div class="white">f4</div>
+        <div class="white">g4</div>
+        <div class="white">a4</div>
+        <div class="white">b4</div>
+
+        <div class="octave-start">c5</div>
+        <div class="white">d5</div>
+        <div class="white">e5</div>
+        <div class="white">f5</div>
+        <div class="white">g5</div>
+        <div class="white">a5</div>
+        <div class="white">b5</div>
+      </div>
+    <!-- 简谱输入 -->
+    <style>
+        .editor
+        {
+            border: solid 1px black;
+        }
+        #line1 >td
+        {
+            width: 64px;
+            height: 64px;
+            text-align: center;
+        }
+    </style>
+    <div class="editor">
+        简谱编辑器
+        <button>midi视图</button>
+        <button>简谱视图</button>
+        <button onclick="help()">帮助</button>
+        <button onclick="change_editor_status('play')">播放</button>
+        <button onclick="change_editor_status('stop')">停止</button>
+        速度调节
+        <!-- <button onclick="change_speed('faster')">快一点</button>
+        <button onclick="change_speed('slower')">慢一点</button> -->
+        速度间隔调节单位
+        <input onchange="set_linespeed(this)" type="text" placeholder="请输入数字单位，以毫秒为单位" >
+        参考间隔：1/4拍:250ms 1/8:125ms 1/16:62ms
+        <br/>
+        选择音名
+        <div id="note-wrapper">
+            <button onclick="note_choose(1,this)">1</button>
+            <button onclick="note_choose(2,this)">2</button>
+            <button onclick="note_choose(3,this)">3</button>
+            <button onclick="note_choose(4,this)">4</button>
+            <button onclick="note_choose(5,this)">5</button>
+            <button onclick="note_choose(6,this)">6</button>
+            <button onclick="note_choose(7,this)">7</button>
+            <!-- 延音符号 -->
+            <button>—</button>
+            <button onclick="toogle_edit(this)">编辑模式</button>
+            编辑说明：-为特殊延音符号，小键盘左右移动，数字键输入note
+        </div>
+        <table border="2px">
+            <tr id="cursor">
+                <th>0</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>10</th>
+                <th>11</th>
+                <th>12</th>
+                <th>13</th>
+                <th>14</th>
+                <th>15</th>
+            </tr>
+            <tr id="line1">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                </tr>
+        </table>
+        <!-- <canvas id="editor" width="1920" height="1080"></canvas> -->
+        
+    </div>
+    <!-- 琴声部分 -->
+      <script>
+        const ctx = new AudioContext()
+        const osc1_detune = document.getElementById("osc1-detune")
+        const osc2_detune = document.getElementById("osc2-detune")
+
+        var osc1 = ctx.createOscillator()
+        var osc2 = ctx.createOscillator()
+        var osc3 = ctx.createOscillator()
+        var noteTable = 
+        {
+            "c3":130,
+            "d3":146,
+            "e3":164,
+            "f3":174,
+            "g3":196,
+            "a3":220,
+            "b3":246,
+            
+            "c4":261,
+            "d4":293,
+            "e4":329,
+            "f4":349,
+            "g4":392,
+            "a4":440,
+            "b4":493,
+
+            "c5":523,
+            "d5":587,
+            "e5":659,
+            "f5":698,
+            "g5":784,
+            "a5":880,
+            "b5":987,
+        }
+        osc1.connect(ctx.destination)
+        osc2.connect(ctx.destination)
+
+        document.getElementById("osc1-detune").addEventListener("change",function(event)
+        {
+            osc1.detune.value = event.target.value
+            console.log(event.target.value)
+        })
+        document.getElementById("osc2-detune").addEventListener("change",function(event)
+        {
+            osc2.detune.value = event.target.value
+            console.log(event.target.value)
+        })
+        // 设置琴onoff
+        const piano_window = document.getElementsByClassName("piano-window").item(0)
+        for(var i=0;i<piano_window.children.length;i++)
+        {
+            var e = piano_window.children.item(i)
+            e.addEventListener("mousedown",(event)=>
+            {
+               var tg = event.target
+               tg.style = "background-color:yellow"
+               if(tg.innerText == "c3")
+               {
+                osc1.frequency.value = noteTable.c3
+                osc2.frequency.value = noteTable.c3
+                // console.log("c3");
+               }
+               if(tg.innerText == "d3")
+               {
+                osc1.frequency.value = noteTable.d3
+                osc2.frequency.value = noteTable.d3
+               }
+               if(tg.innerText == "e3")
+               {
+                osc1.frequency.value = noteTable.e3
+                osc2.frequency.value = noteTable.e3
+               }
+               if(tg.innerText == "f3")
+               {
+                osc1.frequency.value = noteTable.f3
+                osc2.frequency.value = noteTable.f3
+               }
+               if(tg.innerText == "g3")
+               {
+                osc1.frequency.value = noteTable.g3
+                osc2.frequency.value = noteTable.g3
+               }
+               if(tg.innerText == "a3")
+               {
+                osc1.frequency.value = noteTable.a3
+                osc2.frequency.value = noteTable.a3
+               }
+               if(tg.innerText == "b3")
+               {
+                osc1.frequency.value = noteTable.b3
+                osc2.frequency.value = noteTable.b3
+               }
+
+               if(tg.innerText == "c4")
+               {
+                osc1.frequency.value = noteTable.c4
+                osc2.frequency.value = noteTable.c4
+                // console.log("c3");
+               }
+               if(tg.innerText == "d4")
+               {
+                osc1.frequency.value = noteTable.d4
+                osc2.frequency.value = noteTable.d4
+               }
+               if(tg.innerText == "e4")
+               {
+                osc1.frequency.value = noteTable.e4
+                osc2.frequency.value = noteTable.e4
+               }
+               if(tg.innerText == "f4")
+               {
+                osc1.frequency.value = noteTable.f4
+                osc2.frequency.value = noteTable.f4
+               }
+               if(tg.innerText == "g4")
+               {
+                osc1.frequency.value = noteTable.g4
+                osc2.frequency.value = noteTable.g4
+               }
+               if(tg.innerText == "a4")
+               {
+                osc1.frequency.value = noteTable.a4
+                osc2.frequency.value = noteTable.a4
+               }
+               if(tg.innerText == "b4")
+               {
+                osc1.frequency.value = noteTable.b4
+                osc2.frequency.value = noteTable.b4
+               }
+
+               if(tg.innerText == "c5")
+               {
+                osc1.frequency.value = noteTable.c5
+                osc2.frequency.value = noteTable.c5
+                // console.log("c3");
+               }
+               if(tg.innerText == "d5")
+               {
+                osc1.frequency.value = noteTable.d5
+                osc2.frequency.value = noteTable.d5
+               }
+               if(tg.innerText == "e5")
+               {
+                osc1.frequency.value = noteTable.e5
+                osc2.frequency.value = noteTable.e5
+               }
+               if(tg.innerText == "f5")
+               {
+                osc1.frequency.value = noteTable.f5
+                osc2.frequency.value = noteTable.f5
+               }
+               if(tg.innerText == "g5")
+               {
+                osc1.frequency.value = noteTable.g5
+                osc2.frequency.value = noteTable.g5
+               }
+               if(tg.innerText == "a5")
+               {
+                osc1.frequency.value = noteTable.a5
+                osc2.frequency.value = noteTable.a5
+               }
+               if(tg.innerText == "b5")
+               {
+                osc1.frequency.value = noteTable.b5
+                osc2.frequency.value = noteTable.b5
+               }
+
+            })
+            e.addEventListener("mouseup",(event)=>
+            {
+                var tg = event.target
+                tg.style = ""
+            })
+        }
+        function change_osc_type(p_type)
+        {
+            if(p_type == "sin")
+            {
+                osc1.type = "sine"
+                osc2.type = "sine"
+            }
+            else if(p_type == "trai")
+            {
+                osc1.type = "triangle"
+                osc2.type = "triangle"
+            }
+            else if(p_type == "square")
+            {
+                osc1.type = "square"
+                osc2.type = "square"
+            }
+            else if(p_type == "saw")
+            {
+                osc1.type = "sawtooth"
+                osc2.type = "sawtooth"
+            }
+        }
+
+        function set_ratio(p_detune1,p_detune2)
+        {
+            osc1_detune.value = p_detune1
+            osc2_detune.value = p_detune2
+            osc1.detune.value = p_detune1
+            osc2.detune.value = p_detune2
+        }
+        function test()
+        {
+            osc1.start()
+            osc2.start()
+        }
+        function stop_test()
+        {
+            osc1.stop()
+            osc2.stop()
+            
+        }
+        
+      </script>
+    <!-- 编辑器脚本 -->
+    <script>
+        var play_timer
+        // 速度调节
+        var line_speed = 250
+        
+        function help()
+        {
+            alert("简谱的1234567对应音名")
+        }
+        // 
+        const note_wrapper = document.getElementById("note-wrapper")
+        const cursor = document.getElementById("cursor")
+        var cursor_index = 0
+        const line1_wrapper = document.getElementById("line1")
+        function note_choose(p_id,p_element)
+        {
+            // console.log(p_element)
+            // console.log(p_id)
+            var choosed_index = p_id -1
+            var choosed_text = p_element.innerText
+
+            var choosed_child = note_wrapper.children.item(choosed_index)
+            choosed_child.style = "background-color:yellow"
+
+            // 去除其他按钮的选择状态 原理是遍历+if排除
+            for(var i=0;i<note_wrapper.children.length;i++)
+            {
+                var each = note_wrapper.children.item(i)
+                if(each.innerText == choosed_text)
+                {
+
+                }
+                else
+                {
+                    each.style = ""
+                }
+                    
+            }
+            // p_element.style = "background-color:yellow"
+        }
+        function change_editor_status(p_status)
+        {
+            if(p_status == "play")
+            {
+               set_cursor()
+            }
+            else if(p_status == "stop")
+            {
+                clearTimeout(play_timer)
+            }
+        }
+        function set_cursor()
+        {
+            // console.log(cursor_index);
+            // 核心数据循环
+            if(cursor_index == 16)
+            {
+                for(var i=0;i<16;i++)
+                {
+                    cursor.children.item(i).style = ""
+                }
+                cursor_index = -1
+            }
+            if(cursor_index != -1)
+            {
+                var cur_item = cursor.children.item(cursor_index)
+                cur_item.style = "background-color:yellow"
+                var current_note = line1_wrapper.children.item(cursor_index).innerText
+                // console.log(current_note)
+                // 手写table比对
+                if(current_note == "1")
+                {
+                    osc1.frequency.value = noteTable.c3
+                    osc2.frequency.value = noteTable.c3
+                }
+                if(current_note == "2")
+                {
+                    osc1.frequency.value = noteTable.d3
+                    osc2.frequency.value = noteTable.d3
+                }
+                if(current_note == "3")
+                {
+                    osc1.frequency.value = noteTable.e3
+                    osc2.frequency.value = noteTable.e3
+                }
+                if(current_note == "4")
+                {
+                    osc1.frequency.value = noteTable.f3
+                    osc2.frequency.value = noteTable.f3
+                }
+                if(current_note == "5")
+                {
+                    osc1.frequency.value = noteTable.g3
+                    osc2.frequency.value = noteTable.g3
+                }
+                if(current_note == "6")
+                {
+                    osc1.frequency.value = noteTable.a3
+                    osc2.frequency.value = noteTable.a3
+                }
+                if(current_note == "7")
+                {
+                    osc1.frequency.value = noteTable.b3
+                    osc2.frequency.value = noteTable.b3
+                }
+            }
+            cursor_index += 1
+            play_timer = setTimeout(set_cursor,line_speed);
+        }
+        // 编辑模式
+        var toogle_button = 0
+        function toogle_edit(p_self)
+        {
+            if(toogle_button == 0)
+            {
+                p_self.style = "background-color:yellow"
+                toogle_button = 1
+                cursor.children.item(0).style = "background-color:green"
+            }
+            else if(toogle_button == 1)
+            {
+                p_self.style = ""
+                toogle_button = 0
+                cursor.children.item(0).style = ""
+            }
+        }
+        // 编辑模式 小键盘
+        var edit_index = 0
+        document.addEventListener("keydown",key_down)
+        function key_down(event)
+        {
+            if(toogle_button == 1)
+            {
+                // console.log(event)
+                if(event.key == "1")
+                {
+                    line1_wrapper.children.item(edit_index).innerText = "1"
+                }
+                if(event.key == "2")
+                {
+                    line1_wrapper.children.item(edit_index).innerText = "2"
+                }
+                if(event.key == "3")
+                {
+                    line1_wrapper.children.item(edit_index).innerText = "3"
+                }
+                if(event.key == "4")
+                {
+                    line1_wrapper.children.item(edit_index).innerText = "4"
+                }
+                if(event.key == "5")
+                {
+                    line1_wrapper.children.item(edit_index).innerText = "5"
+                }
+                if(event.key == "6")
+                {
+                    line1_wrapper.children.item(edit_index).innerText = "6"
+                }
+                if(event.key == "7")
+                {
+                    line1_wrapper.children.item(edit_index).innerText = "7"
+                }
+                if(event.key == "ArrowRight")
+                {
+                    if(edit_index<15)
+                    {
+                        edit_index +=1
+                        cursor.children.item(edit_index).style = "background-color:green"
+                        cursor.children.item(edit_index-1).style = ""
+                    }
+                }
+                if(event.key == "ArrowLeft")
+                {
+                    if(edit_index>0)
+                    {
+                        edit_index -=1
+                        cursor.children.item(edit_index).style = "background-color:green"
+                        cursor.children.item(edit_index+1).style = ""
+                    }
+                }
+                // console.log(edit_index)
+            }
+            
+            
+        }
+
+        function key_left()
+        {
+            edit_index -=1
+
+        }
+        function set_linespeed(p_element)
+        {
+            line_speed = p_element.value
+        }
+    </script>
+</body>
+</html>
