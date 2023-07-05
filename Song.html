@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SongDemo</title>
+    <style>
+        #sub-melody
+        {
+            text-align: center;
+        }
+        .inline-block
+        {
+            display: inline-block;
+            border: solid 1px black;
+        }
+        body
+        {
+            user-select: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+</head>
+<body oncontextmenu="return false">
+    <h2>基于表格的多媒体 简谱播放图像界面实现</h2>
+
+    <div id="playCtl" class="inline-block">
+        <button>片段</button>
+        <button id="" onclick="change_song_status()" style="font-size:24px">
+            <i class="fa fa-play"></i>
+            <!-- <i class="fa fa-pause"></i> -->
+        </button>
+        <button style="font-size:24px"><i class="fa fa-stop"></i></button>
+        <input type="text" placeholder="bpm">    
+    </div>
+    <div class="inline-block">
+        <input type="range">
+    </div>
+    <div class="inline-block">
+        <span id="timer">00:00</span>
+    </div>
+    <div class="inline-block" id="patUtil">
+        <select name="">
+            <option value="">片段1</option>
+            <option value="">片段2</option>
+        </select>
+        <button>删除</button>
+        <button>+</button>
+    </div>
+    <h2>pattern-editor</h2>
+    
+    <table border="2px" id="pattern">
+        <!-- 显示行 -->
+        <tr id="line-tip">
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9</th>
+            <th>10</th>
+            <th>11</th>
+            <th>12</th>
+            <th>13</th>
+            <th>14</th>
+            <th>15</th>
+        </tr>
+        <tr id="main-melody">
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+            <td>3</td>
+            <td>3</td>
+            <td>3</td>
+            <td>3</td>
+            <td>4</td>
+            <td>4</td>
+            <td>4</td>
+            <td>4</td>
+        </tr>
+        <tr id="sub-melody">
+            <!-- get的时候按照index的colspan倍数处理 -->
+            <td colspan="4">C</td>
+            <td colspan="4">D</td>
+            <td colspan="4">E</td>
+            <td colspan="4">F</td>
+
+        </tr>
+    </table>
+    <!-- 歌曲编辑器 -->
+    <style>
+        #xiao-jie > th
+        {
+            width: 32px;
+        }
+        .block > td
+        {
+            width: 32px;
+            height: 32px;
+        }
+        .block > td:hover
+        {
+            cursor: pointer;
+        }
+    </style>
+    <h2>song-editor</h2>
+    <button>-</button>
+    <!-- 小节宽度设计32*2 -->
+    单小节长度：<span>1/4音符</span>
+    <button>+</button>
+    <table border="2px" id="song-editor">
+        <tr id="xiao-jie">
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+        </tr>
+        <tr class="block">
+            <td onclick="set_pat(this)"></td>
+            <td onclick="set_pat(this)"></td>
+            <td></td>
+            <td></td>
+        </tr>
+        
+    </table>
+    <script>
+        var PlayCtl= function()
+        {
+            this.change_song_status = function(p_status)
+            {
+                if(p_status == "play")
+                {
+
+                }
+                else if(p_status == "pause")
+                {
+
+                }
+                else if(p_status == "stop")
+                {
+
+                }
+            }
+            this.toggle_playmode = function(p_mode)
+            {
+                if(p_mode == "pattern")
+                {
+
+                }
+                else if(p_mode == "song")
+                {
+
+                }
+            }
+        }
+        // 组件
+        var Pattern = function()
+        {
+            const line_tip = document.getElementById("line-tip")
+            this.cursor_index = 0
+            // 高音谱号 低音谱号
+            this.melody = []
+            this.sub = []
+            // 显示背景变化 //tr那一行
+            this.set_cursor = function(p_index)
+            {
+                line_tip.children.item(p_index).style = "background-color:yellow"
+            }
+        }
+        // 片段增删改查编辑器
+        var PatToolCtl = function()
+        {
+            this.get_pat = function()
+            {
+                var pat_chooser = document.getElementById("patUtil").children.item(0)
+                // console.log(pat_chooser);
+                var value = pat_chooser.options[pat_chooser.selectedIndex].innerText
+                return value
+            }
+        }
+        var patternCtl = new Pattern()
+        var playCtl = new PlayCtl()
+        const patToolCtl = new PatToolCtl()
+
+        function set_pat(p_element)
+        {
+            p_element.innerText = patToolCtl.get_pat()
+        }
+    </script>
+</body>
+</html>

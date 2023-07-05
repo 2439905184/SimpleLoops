@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>windows test</title>
+    <style>
+        div
+        {
+            border: solid 2px blue;
+        }
+        .float-window
+        {
+            width: fit-content;
+        }
+        .float-window > .title-bar >.title
+        {
+            display: inline;
+        }
+        .float-window > .content
+        {
+            color: white;
+            background-color: black;
+            width: 800px;
+            height: 600px;
+        }
+        .hide
+        {
+            display: none;
+        }
+        .task-bar
+        {
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+    <!-- window size x y wid heit -->
+    <!-- root -->
+    <div class="float-window">
+        <div class="title-bar">
+            <h3 class="title">title</h3>
+            <button onclick="window_min(this)">最小化</button>
+            <button onclick="window_max_restore()">最大化/恢复窗口</button>
+            <button onclick="window_close(this)">关闭</button>
+        </div>
+        <div class="content">content</div>
+    </div>
+    <!-- 任务栏 -->
+    <div class="task-bar">
+        <button>window1</button>
+        <button>window2</button>
+    </div>
+    <script>
+        const window_status = ["mined","maxed","closed"]
+        // var current_window_status
+        function window_min(p_self)
+        { 
+            const root = p_self.parentNode.parentNode
+            const content = root.children.item(1)
+            content.setAttribute("class","hide")
+            // root.class = "float-window-hide"
+        }
+        function window_close(p_self)
+        {
+            const root = p_self.parentNode.parentNode
+            root.setAttribute("class","hide")
+        }
+    </script>
+</body>
+</html>

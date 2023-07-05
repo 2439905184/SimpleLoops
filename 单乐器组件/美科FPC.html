@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 鼓机 上 */
+        .FPC
+        {
+            background-color: #e4e3d2;
+        }
+        .FPC > .top-bar > h2
+        {
+            display: inline;
+        }
+        .FPC > .top-bar
+        {
+            border-bottom: solid 1px black;
+        }
+        .channels
+        {
+            display: flex;
+            flex-direction: row;
+        }
+        /* 每个频道 */
+        .channel
+        {
+            border: solid 1px black;
+            display: flex;
+            flex-direction: column;
+            width: fit-content;
+        }
+
+        /* 节奏编辑 */
+        .line > .label
+        {
+            display: inline-block;
+        }
+        .line > .beats-wrapper
+        {
+            display: inline-block;
+        }
+        .note
+        {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border: solid 1px;
+        }
+        .light
+        {
+            margin-left: 8px;
+            display: inline-block;
+            height: 5px;
+            width: 1em;
+            border: solid 1px;
+        }
+        .down
+        {
+            background-color: #a88462;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+</head>
+<body>
+    <div class="FPC">
+        <div class="top-bar">
+            <h2>Simply Drum machine</h2>
+            <span>鼓组音色选择</span>
+            <button>←</button>
+            <select name="" id="">
+                <option value="">707</option>
+                <option value="">808</option>
+                <option value="">909</option>
+                <option value="">美科打击乐36套装</option>
+            </select>
+            <button>→</button>
+            <span>节奏选择</span>
+            <button>←</button>
+            <select name="" id="">
+                <option value="">Disco</option>
+                <option value="">瓦尔兹</option>
+                <option value="">慢摇</option>
+            </select>
+            <button>→</button>
+        </div>
+        <div class="channels">
+            <div class="channel">
+                <div class="top">
+                    <button>solo</button>
+                    <button>mute</button>
+                </div>
+                
+                pan<input type="range">
+                vol<input type="range">
+                
+                <button><i class="fa fa-folder"></i></button>
+                <button><i class="fa fa-play"></i>play</button>
+            </div>
+        </div>
+    </div>
+    <style>
+        #play-ctl
+        {
+            border: solid 4px ;
+            background-color: white;
+        }
+        #play-ctl-play
+        {
+            border: solid 4px ;
+            background-color: white;
+            border-color: green;
+        }
+        #play-ctl-stop
+        {
+            border: solid 4px ;
+            background-color: white;
+            border-color: red;
+        }
+    </style>
+    <div class="down">
+        <playstop-button id="play-ctl">
+            play
+        </playstop-button>
+        <!-- <button id="play-ctl">play</button> -->
+        <div class="editor-wrapper">
+            <div class="line">
+                <div class="lights-wrapper">
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                    <div class="light"></div>
+                </div>
+                <div class="beats-wrapper">
+                    <div class="note">1</div>
+                    <div class="note">2</div>
+                    <div class="note">3</div>
+                    <div class="note">4</div>
+                    <div class="note">5</div>
+                    <div class="note">6</div>
+                    <div class="note">7</div>
+                    <div class="note">8</div>
+                    <div class="note">9</div>
+                    <div class="note">10</div>
+                    <div class="note">11</div>
+                    <div class="note">12</div>
+                    <div class="note">13</div>
+                    <div class="note">14</div>
+                    <div class="note">15</div>
+                    <div class="note">16</div>
+                </div>
+                
+                </div>
+        </div>
+    </div>
+    
+    
+    </div>
+    <script>
+        class PlayStopButton extends HTMLElement
+        {
+            constructor()
+            {
+                super()
+                this.isToggled = false
+                this.onclick = (e)=>
+                {
+                    this.isToggled = !this.isToggled
+                    // console.log(this.isToggled);
+                    if(this.isToggled)
+                    {
+                        this.id = "play-ctl-play"
+                        this.innerText = "stop"
+                    }
+                    else
+                    {
+                        this.id = "play-ctl-stop"
+                        this.innerText = "play"
+                    }
+                }
+            }
+        }
+        customElements.define("playstop-button",PlayStopButton)
+        function init_controls()
+        {
+            const channel_wrapper = document.getElementsByClassName("channels").item(0)
+            var index = 0
+            while(index <36)
+            {
+                var channel_prototype = document.getElementsByClassName("channel").item(0).cloneNode(true)
+                channel_wrapper.append(channel_prototype)
+                index +=1
+            }
+        }
+        function bind_sounds()
+        {
+            const channel_wrapper = document.getElementsByClassName("channels").item(0)
+            var play_btn = channel_wrapper.children.item(0).children.item(5)
+            console.log(play_btn);
+        }
+        init_controls()
+        bind_sounds()
+    </script>
+    <script>
+        var sounds = []
+        
+        for(var i=1;i<37;i++)
+        {
+            var pre_sound = new Audio()
+            pre_sound.src = "/SimpleLoops/media/美科打击乐"+i + ".wav"
+            sounds.push(sounds)
+        }
+
+    </script>
+</body>
+</html>

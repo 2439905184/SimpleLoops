@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolySynth</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+</head>
+<body>
+    <!-- arp -->
+    <button onclick="Major('c')">Cmajor</button>
+    <button onclick="Major('d')">Dmajor</button>
+    <button>Emajor</button>
+    <script>
+        function Major(p_main)
+        {
+
+        }
+        const synth = new Tone.PolySynth().toDestination();
+        // set the attributes across all the voices using 'set'
+        synth.set({ detune: -1200 });
+        // play a chord
+        synth.triggerAttackRelease(["C4", "E4", "G4"], 1);
+    </script>
+</body>
+</html>
